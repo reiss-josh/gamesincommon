@@ -13,3 +13,7 @@ var apiKey = "XXXXXXX";<br>
 var steamID = "YYYYYY";
 
 5) open up index.html!
+
+
+
+NOTE: if you try comparing with a friend who has their games library set to private, you will not get any results.
