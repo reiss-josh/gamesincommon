@@ -17,6 +17,8 @@ var steamStoreUrl = "https://store.steampowered.com/app/";
 var idsList = [];
 var chosenIDs = "";
 var chosenIDsArr = [];
+//var steamID = ""
+//var apiKey = ""
 idText.value = steamID;
 
 var baseUrl = proxyUrl + steamUrl; //baseUrl stores https://cors-anywhere.../https://api.steampowered.../
