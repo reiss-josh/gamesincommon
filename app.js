@@ -26,6 +26,7 @@ var basefriendsUrl = baseUrl + steamUser + friendUrl  + "?key=" + apiKey + "&ste
 var basesummaryUrl = baseUrl + steamUser + summaryUrl + "?key=" + apiKey + "&steamids="; //summaryurl sets up for GetPlayerSummaries
 var basegamesUrl   = baseUrl + playerSvc + gamesUrl   + "?key=" + apiKey + "&include_appinfo=true&include_player_free_games=true&steamid=";  
 
+//return promise object for a given HTML request (eg GET http://foo.com)
 const sendHttpRequest = (method, url) => {
   const promise = new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -40,6 +41,7 @@ const sendHttpRequest = (method, url) => {
   return promise;
 };
 
+//returns response for GET url
 const getData = (url) => { //call this with "await getData(url)"
   var dataGet = sendHttpRequest('GET', url);
   return dataGet.then(responseData => {
@@ -47,6 +49,7 @@ const getData = (url) => { //call this with "await getData(url)"
   });
 };
 
+//add an ID to the list of selected IDs
 const addID = (ind) => {
   console.log(idsList[ind] + " was added");
   chosenIDs += '<li>'+idsList[ind]+'</li>';
@@ -54,6 +57,7 @@ const addID = (ind) => {
   friendsChose.innerHTML = chosenIDs;
 }
 
+//get the list of friends
 const getFriends = async() => {
   //retrieve steamID
   steamID = idText.value;
@@ -80,10 +84,9 @@ const getFriends = async() => {
   var idl = idsData.response.players;
   //output string of player names; store in playerNames
   var playerNames = "";
+  //SORT idl ALPHABETICALLY BY idl.personaname HERE
+  idl = idl.sort((a, b) => (a.personaname.toLowerCase() > b.personaname.toLowerCase()) ? 1 : -1);
   //output friend names to html list
-  /*
-  SORT idl ALPHABETICALLY BY idl.personaname HERE
-  */
   for(var i = 0; i < idl.length; i++){
     idsList.push(idl[i].steamid);
     playerNames += '<li><button onclick = addID(' + i + ')>' + idl[i].personaname + '</button></li>';
@@ -91,6 +94,7 @@ const getFriends = async() => {
   friendList.innerHTML = playerNames;
 }
 
+//get the games in common between the selected players
 const getGames = async() => {
   var gamesInCommon = [];
   var gamesData = await getData(basegamesUrl + steamID);
@@ -103,15 +107,14 @@ const getGames = async() => {
     currGames = gamesData.response.games;
     gamesInCommon = innerJoin(gamesInCommon, currGames);
   }
-  /*
-  ALPHABETIZE gamesInCommon HERE
-  */
+  //SORT idl ALPHABETICALLY BY idl.personaname HERE
+  gamesInCommon = gamesInCommon.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
   //console.log(gamesInCommon);
   getGameImgs(gamesInCommon);
 }
 
+//takes a url, a caption, and a link, then returns the html for displaying the resulting element
 const imgText = (url, caption, linkTo) => {
-
   return (
     "<li>" +
     "<a href=\"" + linkTo + "\">" +
@@ -121,6 +124,7 @@ const imgText = (url, caption, linkTo) => {
     );
 }
 
+//takes a list of game objects and gets their header.jpg from the steam store
 const getGameImgs = async(gamesList) => {
   var generatedHTML = "";
   for(var i = 0; i < gamesList.length; i++) {
