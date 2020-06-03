@@ -6,39 +6,72 @@ import './index.css';
 var PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
 var STEAM_ID_USER = "76561198041117535";
 var API_KEY_USER = "E1D16427E370EA735611B2EF484399A4";
-var SELECTED_IDS = [];
 
-//component for showing friends
-class FriendsList extends React.Component {
+
+class FriendsGamesList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			steamid: null,
 			friends: [],
 			selectedFriends: [],
+			games: []
 		};
 	}
 
-	async componentDidMount() {
-		const friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
+	handleFriendsList = async() => {
+		let friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
+		const loginObject = {steamid: STEAM_ID_USER, realtionship: "self", friend_since: 0}; //add logged in user to list
+		friendsResult.push(loginObject);
 		let idArray = friendsResult.map(a => a.steamid);
 		const summariesResult = await getPlayerSummaries(idArray, API_KEY_USER, PROXY_URL);
-		let merged = friendsResult.map((item,i) => Object.assign({}, item, summariesResult[i]));
-		this.setState({friends: merged});
+		this.setState({friends: summariesResult});
+
+		//init our selected list with the logged-in user
+		let userObject = [summariesResult.filter(obj => {return obj.steamid === STEAM_ID_USER})[0]];
+		this.setState({selectedFriends: userObject});
+		return summariesResult;
+	}
+
+	handleGamesList = async() => {
+		console.log("handling games list");
+		let currIDS = this.state.selectedFriends.map(a => a.steamid);
+		let allLibraries = await getSteamGamesMultiple(currIDS);
+		let gamesInCommon = getGamesInCommon(allLibraries);
+		this.setState({games: gamesInCommon});
+		return gamesInCommon;
+	}
+
+	async componentDidMount() {
+		//get the friends list, fill out its properties, then store it
+		await this.handleFriendsList();
+		await this.handleGamesList();
 	}
 
 	render() {
 		let currComponent = this; //cache reference for the "setState" in here
-		return (
+		return(
 			<div>
-				<ul>
-					{this.state.friends
-						.sort((a,b) => (a.personaname.toLowerCase() > b.personaname.toLowerCase()) ? 1 : -1)
+				<div>
+					<ul>
+						{
+						alphabetizeObjects(this.state.friends, 'personaname')
 						.map((person, index) => (
-						<li key = {person.steamid}>
+						<li key = {person['steamid']}>
 							<button onClick = {function() {
-									SELECTED_IDS.push(person.steamid); //i'm so sorry this is a global var
-									currComponent.setState({selectedFriends: SELECTED_IDS})
+									let ind = currComponent.state.selectedFriends.indexOf(person);
+									if(ind > -1) {
+										let newSelected = currComponent.state.selectedFriends;
+										newSelected.splice(ind, 1);
+										currComponent.setState({selectedFriends: newSelected});
+										console.log("removed " + person.personaname);
+									} else {
+										let newSelected = currComponent.state.selectedFriends.concat(person);
+										currComponent.setState({selectedFriends: newSelected});
+										console.log("added " + person.personaname);
+									}
+									currComponent.handleGamesList();
+									console.log("Refreshing...");
 								}}>
 								username is {person.personaname}
 							</button>
@@ -47,51 +80,23 @@ class FriendsList extends React.Component {
 				</ul>
 				<ul>
 					{this.state.selectedFriends
-						.map((person,index) => (
-						<li key = {person}>
-							{person}
-						</li>
+					.map((person,index) => (
+					<li key = {person.steamid}>
+						{person.personaname}
+					</li>
 					))}
 				</ul>
 			</div>
-		);
-	}
-}
-
-//component for showing games
-class GamesList extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			games: []
-		};
-	}
-
-	async componentDidMount() {
-		const gamesOwnedByUser = await getSteamGames(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
-		let currIDS = SELECTED_IDS.slice();
-		currIDS.push(STEAM_ID_USER);
-		let allLibraries = await getSteamGamesMultiple(currIDS);
-		let gamesInCommon = getGamesInCommon(allLibraries);
-		this.setState({games: gamesInCommon});
-		SELECTED_IDS = [];
-	}
-
-	render() {
-		//console.log(this.state.games);
-		let currComponent = this;
-		return (
 			<div>
 				<button onClick = {function() {
-							currComponent.componentDidMount();
+							currComponent.handleGamesList();
 							console.log("Refreshing...");
 						}}>
-							game is blah
+							get games
 						</button>
-			<ul>
-				{this.state.games
-				.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1)
-				.map((game, index) => (
+				<ul>
+					{alphabetizeObjects(this.state.games, 'name')
+					.map((game, index) => (
 					<li key = {game.appid}>
 						<button onClick = {function() {
 							console.log(game);
@@ -99,11 +104,17 @@ class GamesList extends React.Component {
 							game is {game.name}
 						</button>
 					</li>
-				))}
-			</ul>
+					))}
+				</ul>
 			</div>
+		</div>
 		);
 	}
+}
+
+//alphabetizes an array of objects by some property
+function alphabetizeObjects(arr, prop) {
+	return arr.sort((a,b) => (a[prop].toLowerCase() > b[prop].toLowerCase()) ? 1 : -1);
 }
 
 //returns promise object given HTTP method and url
@@ -135,14 +146,14 @@ const getRequest = (url) => {
 	)
 }
 
-//returns friend objects given a steamid
+//returns an array of friend objects given a steamid
 const getSteamFriends = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/ISteamUser/GetFriendList/v1/";
 	let response = await getRequest(proxy + baseUrl + "?key="+ apiKey + "&steamid=" + userID);
 	return response.friendslist.friends;
 }
 
-//returns array of player summaries given an array of steamIDs
+//returns an array of player summaries given an array of steamIDs
 const getPlayerSummaries = async(userIDs, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/";
 	let userIDsString;
@@ -152,7 +163,7 @@ const getPlayerSummaries = async(userIDs, apiKey, proxy = "") => {
 	return response.response.players;
 }
 
-//retuns array of owned game objects given a steamID
+//retuns game library (an array of game objects) given a steamID
 const getSteamGames = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
 	let response = await getRequest(proxy + baseUrl + "?key=" + apiKey + "&steamid=" + userID
@@ -160,7 +171,7 @@ const getSteamGames = async (userID, apiKey, proxy = "") => {
 	return response.response.games;
 }
 
-//returns array of games in common given array of steamids
+//returns an array of game libraries given an arrayof steamIDs
 const getSteamGamesMultiple = async(userIDs) => {
 	let allLibraries = [];
 	for(let i = 0; i < userIDs.length; i++)
@@ -171,6 +182,7 @@ const getSteamGamesMultiple = async(userIDs) => {
 	return allLibraries;	
 }
 
+//returns the inner join of multiple game libraries, given as an array
 function getGamesInCommon(libraries) {
 	return innerJoinObjectsMany(libraries, 'appid');
 }
@@ -217,8 +229,7 @@ function innerJoinObjectsTwo(a, b, prop) {
 
 ReactDOM.render(
 	<div>
-		<FriendsList/>
-		<GamesList/>
+		<FriendsGamesList/>
 	</div>,
 	document.getElementById('root')
 );
