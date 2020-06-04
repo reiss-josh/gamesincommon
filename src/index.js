@@ -35,6 +35,7 @@ class FriendsGamesList extends React.Component {
 
 	handleGamesList = async() => {
 		console.log("handling games list");
+		this.setState({games: []}); //resets list --- should include a "loading" image around here
 		let currIDS = this.state.selectedFriends.map(a => a.steamid);
 		let allLibraries = await getSteamGamesMultiple(currIDS);
 		let gamesInCommon = getGamesInCommon(allLibraries);
@@ -60,16 +61,16 @@ class FriendsGamesList extends React.Component {
 						<li key = {person['steamid']}>
 							<button onClick = {function() {
 									let ind = currComponent.state.selectedFriends.indexOf(person);
+									let newSelected;
 									if(ind > -1) {
-										let newSelected = currComponent.state.selectedFriends;
+										newSelected = currComponent.state.selectedFriends;
 										newSelected.splice(ind, 1);
-										currComponent.setState({selectedFriends: newSelected});
-										console.log("removed " + person.personaname);
 									} else {
-										let newSelected = currComponent.state.selectedFriends.concat(person);
-										currComponent.setState({selectedFriends: newSelected});
-										console.log("added " + person.personaname);
+										newSelected = currComponent.state.selectedFriends;
+										newSelected.push(person);
 									}
+									console.log("added/removed " + person.personaname);
+									currComponent.setState({selectedFriends: newSelected});
 									currComponent.handleGamesList();
 									console.log("Refreshing...");
 								}}>
