@@ -20,11 +20,18 @@ class FriendsGamesList extends React.Component {
 	}
 
 	handleFriendsList = async() => {
+		console.log("handling friends list...");
+		//get friends
 		let friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
 		const loginObject = {steamid: STEAM_ID_USER, realtionship: "self", friend_since: 0}; //add logged in user to list
 		friendsResult.push(loginObject);
+		//get summaries
 		let idArray = friendsResult.map(a => a.steamid);
-		const summariesResult = await getPlayerSummaries(idArray, API_KEY_USER, PROXY_URL);
+		let summariesResult = await getPlayerSummaries(idArray, API_KEY_USER, PROXY_URL);
+		//clean up
+		summariesResult.forEach(function (a) {
+			a.gameLibrary = null;
+		});
 		this.setState({friends: summariesResult});
 
 		//init our selected list with the logged-in user
@@ -34,10 +41,43 @@ class FriendsGamesList extends React.Component {
 	}
 
 	handleGamesList = async() => {
-		console.log("handling games list");
-		this.setState({games: []}); //resets list --- should include a "loading" image around here
-		let currIDS = this.state.selectedFriends.map(a => a.steamid);
-		let allLibraries = await getSteamGamesMultiple(currIDS);
+		console.log("handling games list...");
+		this.setState({games: []}); //resets list --- should start up a "loading" image around here
+		let currFrns = this.state.friends;
+		let currSelected = this.state.selectedFriends;
+
+		//determine what data has/hasn't been memoized; retrieve it
+		let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
+		console.log(missFound);
+
+		//look up the missing data
+		let allLibraries = [];
+		if(missFound.missing.length > 0){ //if there's anything missing...
+			let missingLibraries = await getSteamGamesMultiple(missFound.missing);
+			allLibraries = allLibraries.concat(missingLibraries);
+		};
+		
+		//memoize the missing data, now that we've grabbed it
+		if(allLibraries.length > 0){ //if we found something above...
+			joinMissingParams(missFound.missing, allLibraries, 'gameLibrary', 'steamid');
+
+			//i have somehow accidentally made the following unnecessary...
+			//i'm assuming i messed up some deep vs. shallow copying somewhere, which is probably very bad
+			/*
+			//let joined = joinMissingParams(missFound.missing, allLibraries, 'gameLibrary', 'steamid');
+			let ind;
+			joined.forEach(function (elt) {
+				ind = currFrns.map(e => e.steamid).indexOf(elt.steamid);
+				currFrns[ind].gameLibrary = elt.gameLibrary;
+			});
+			this.setState({friends: currFrns});
+			*/
+		};
+
+		//make sure that we actually use the memoized data
+		allLibraries = allLibraries.concat(missFound.found);
+
+		//get gamesInCommon, now that we have all our data
 		let gamesInCommon = getGamesInCommon(allLibraries);
 		this.setState({games: gamesInCommon});
 		return gamesInCommon;
@@ -51,53 +91,61 @@ class FriendsGamesList extends React.Component {
 
 	render() {
 		let currComponent = this; //cache reference for the "setState" in here
-		return(
-			<div>
-				<div>
-					<ul>
-						{
-						alphabetizeObjects(this.state.friends, 'personaname')
-						.map((person, index) => (
-						<li key = {person['steamid']}>
-							<button onClick = {function() {
-									let ind = currComponent.state.selectedFriends.indexOf(person);
-									let newSelected;
-									if(ind > -1) {
-										newSelected = currComponent.state.selectedFriends;
-										newSelected.splice(ind, 1);
-									} else {
-										newSelected = currComponent.state.selectedFriends;
-										newSelected.push(person);
-									}
-									console.log("added/removed " + person.personaname);
-									currComponent.setState({selectedFriends: newSelected});
-									currComponent.handleGamesList();
-									console.log("Refreshing...");
-								}}>
-								username is {person.personaname}
-							</button>
-						</li>
-					))}
-				</ul>
-				<ul>
-					{this.state.selectedFriends
-					.map((person,index) => (
+		let friendButtons, selectedFriendsList, gamesButtons;
+
+		//friend list JSX
+		if(this.state.friends && this.state.friends.length > 0){
+			friendButtons =
+			<ul> {
+				alphabetizeObjects(this.state.friends, 'personaname')
+				.map((person, index) => (
+					<li key = {person['steamid']}>
+						<button onClick = {function() {
+							let ind = currComponent.state.selectedFriends.indexOf(person);
+							let newSelected;
+							if(ind > -1) {
+								newSelected = currComponent.state.selectedFriends;
+								newSelected.splice(ind, 1);
+							} else {
+								newSelected = currComponent.state.selectedFriends;
+								newSelected.push(person);
+							}
+								console.log("added/removed " + person.personaname);
+								currComponent.setState({selectedFriends: newSelected});
+								currComponent.handleGamesList();
+								console.log("Refreshing...");
+							}}>
+							username is {person.personaname}
+						</button>
+					</li>
+				))
+			} </ul>
+		} else {
+			friendButtons = <div>do you not have any friends??</div>
+		}
+
+		//selected friends JSX
+		if(this.state.selectedFriends && this.state.selectedFriends.length > 0)
+		{
+			selectedFriendsList =
+			<ul>{
+				this.state.selectedFriends
+				.map((person,index) => (
 					<li key = {person.steamid}>
 						{person.personaname}
 					</li>
-					))}
-				</ul>
-			</div>
-			<div>
-				<button onClick = {function() {
-							currComponent.handleGamesList();
-							console.log("Refreshing...");
-						}}>
-							get games
-						</button>
-				<ul>
-					{alphabetizeObjects(this.state.games, 'name')
-					.map((game, index) => (
+				))
+			}</ul>
+		} else {
+			selectedFriendsList = <div>you need to select some friends!!</div>
+		}
+
+		//games list JSX
+		if(this.state.games && this.state.games.length > 0){
+			gamesButtons =
+			<ul> {
+				alphabetizeObjects(this.state.games, 'name')
+				.map((game, index) => (
 					<li key = {game.appid}>
 						<button onClick = {function() {
 							console.log(game);
@@ -105,17 +153,24 @@ class FriendsGamesList extends React.Component {
 							game is {game.name}
 						</button>
 					</li>
-					))}
-				</ul>
+				))
+			} </ul>
+		} else {
+			gamesButtons = <div>you have no games in common!! is one of your friends' games library private? maybe you haven't selected any users?</div>
+		}
+
+		return(
+			<div>
+				<div>
+					{friendButtons}
+					{selectedFriendsList}
+				</div>
+				<div>
+					{gamesButtons}
+				</div>
 			</div>
-		</div>
 		);
 	}
-}
-
-//alphabetizes an array of objects by some property
-function alphabetizeObjects(arr, prop) {
-	return arr.sort((a,b) => (a[prop].toLowerCase() > b[prop].toLowerCase()) ? 1 : -1);
 }
 
 //returns promise object given HTTP method and url
@@ -172,19 +227,21 @@ const getSteamGames = async (userID, apiKey, proxy = "") => {
 	return response.response.games;
 }
 
-//returns an array of game libraries given an arrayof steamIDs
-const getSteamGamesMultiple = async(userIDs) => {
+//returns an array of game libraries given an arrayof player objects
+const getSteamGamesMultiple = async(playerObjs) => {
+	let userIDs = playerObjs.map(a => a.steamid);
 	let allLibraries = [];
 	for(let i = 0; i < userIDs.length; i++)
 	{
 		let gms = await getSteamGames(userIDs[i], API_KEY_USER, PROXY_URL);
-		allLibraries.push(gms);
+		allLibraries.push({steamid: userIDs[i], gameLibrary: gms});
 	}
 	return allLibraries;	
 }
 
-//returns the inner join of multiple game libraries, given as an array
-function getGamesInCommon(libraries) {
+//returns the inner join of multiple game libraries, given an array of player objects
+function getGamesInCommon(userObjects) {
+	let libraries = userObjects.map(u => u.gameLibrary);
 	return innerJoinObjectsMany(libraries, 'appid');
 }
 
@@ -225,6 +282,51 @@ function innerJoinObjectsTwo(a, b, prop) {
     }
   }
   return c;
+}
+
+/*
+	"arrSrc" is the array we're looking at to determine what entries are missing etnries
+	"arrNew" is the array of entries that we're checking in on
+	"propCheck" is the property we're checking for missingness
+	"propIdentify" is used to identify entries in arrSrc compared with arrNew
+	returns [missingEntries],[foundEntries]
+*/
+function sepMissingParams(arrSrc, arrNew, propCheck, propIdentify){
+	let arrMissing = [];
+	let arrFound = [];
+	let foundObj;
+	arrNew.forEach(function (elt) {
+		foundObj = arrSrc.find(fnd => fnd[propIdentify] === elt[propIdentify]);
+		if(foundObj[propCheck] === null){
+			arrMissing.push(foundObj);
+		}
+		else{
+			arrFound.push(foundObj);
+		}
+	});
+	return {missing: arrMissing, found: arrFound};
+}
+
+/*
+	"arrNeedsFilling" is the source array, which has entries for which some property is null
+	"arrCanFill" is some array with key,value entries, s.t. these pairs can be used to "repair" the source array
+		--note: "arrCanFill" can have more properties than just these keys or values.
+	"propFill" is the value in these k,v pairs
+	"propIdentify" is the key in these k,v pairs
+*/
+function joinMissingParams(arrNeedsFilling, arrCanFill, propFill, propIdentify){
+	let foundObj;
+	arrNeedsFilling = arrNeedsFilling.slice(); //should ensure shallow copy?
+	for(let i = 0; i < arrCanFill.length; i++) {
+		foundObj = arrNeedsFilling.find(fnd => fnd[propIdentify] === arrCanFill[i][propIdentify]);
+		foundObj[propFill] = arrCanFill[i][propFill];
+	};
+	return arrNeedsFilling;
+}
+
+//alphabetizes an array of objects by some property
+function alphabetizeObjects(arr, prop) {
+	return arr.sort((a,b) => (a[prop].toLowerCase() > b[prop].toLowerCase()) ? 1 : -1);
 }
 
 

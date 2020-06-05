@@ -1,10 +1,10 @@
 final app:
 
-login page
-leads to main page
-pictures/usernames, alphabetized, of friends
-by default, show logged user's library.
-whenever a new friend is clicked, sort down to only include the inner join of the currently shown library with theirs.
+login page -- leads to main page, passes logged in info
+
+hand off network requests somehow -- don't expose api key.
+
+add pictures of friends
   -- memoize friend libraries
 include sort options
   -- take inner OR full join of tags, by user choice
