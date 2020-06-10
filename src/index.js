@@ -5,19 +5,19 @@ import './index.css';
 //somehow retrieve steamid from the login ???
 var PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
 var STEAM_ID_USER = "76561198041117535";
+//var STEAM_ID_USER = "";
 var API_KEY_USER = "E1D16427E370EA735611B2EF484399A4";
-
 
 class FriendsGamesList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			steamid: null,
+			steamid: STEAM_ID_USER,
 			friends: [],
 			selectedFriends: [],
-			games: []
+			games: [],
 		};
-	}
+  }
 
 	handleFriendsList = async() => {
 		console.log("handling friends list...");
@@ -48,7 +48,7 @@ class FriendsGamesList extends React.Component {
 
 		//determine what data has/hasn't been memoized; retrieve it
 		let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
-		console.log(missFound);
+		//console.log(missFound);
 
 		//look up the missing data
 		let allLibraries = [];
@@ -85,6 +85,9 @@ class FriendsGamesList extends React.Component {
 
 	async componentDidMount() {
 		//get the friends list, fill out its properties, then store it
+		if(this.state.steamid == null){
+			return;
+		}
 		await this.handleFriendsList();
 		await this.handleGamesList();
 	}
@@ -96,30 +99,9 @@ class FriendsGamesList extends React.Component {
 		//friend list JSX
 		if(this.state.friends && this.state.friends.length > 0){
 			friendButtons =
-			<ul> {
-				alphabetizeObjects(this.state.friends, 'personaname')
-				.map((person, index) => (
-					<li key = {person['steamid']}>
-						<button onClick = {function() {
-							let ind = currComponent.state.selectedFriends.indexOf(person);
-							let newSelected;
-							if(ind > -1) {
-								newSelected = currComponent.state.selectedFriends;
-								newSelected.splice(ind, 1);
-							} else {
-								newSelected = currComponent.state.selectedFriends;
-								newSelected.push(person);
-							}
-								console.log("added/removed " + person.personaname);
-								currComponent.setState({selectedFriends: newSelected});
-								currComponent.handleGamesList();
-								console.log("Refreshing...");
-							}}>
-							username is {person.personaname}
-						</button>
-					</li>
-				))
-			} </ul>
+			<ul>
+				{makeSelectorButton(this.state.friends, 'personaname', currComponent)}
+			</ul>
 		} else {
 			friendButtons = <div>do you not have any friends??</div>
 		}
@@ -129,12 +111,7 @@ class FriendsGamesList extends React.Component {
 		{
 			selectedFriendsList =
 			<ul>{
-				this.state.selectedFriends
-				.map((person,index) => (
-					<li key = {person.steamid}>
-						{person.personaname}
-					</li>
-				))
+				makeSelectorButton(this.state.selectedFriends, 'personaname', currComponent)
 			}</ul>
 		} else {
 			selectedFriendsList = <div>you need to select some friends!!</div>
@@ -146,32 +123,40 @@ class FriendsGamesList extends React.Component {
 			<ul> {
 				alphabetizeObjects(this.state.games, 'name')
 				.map((game, index) => (
-					<li key = {game.appid}>
-						<button onClick = {function() {
-							console.log(game);
-						}}>
-							game is {game.name}
-						</button>
-					</li>
+					makeGameButton(game)
 				))
 			} </ul>
 		} else {
 			gamesButtons = <div>you have no games in common!! is one of your friends' games library private? maybe you haven't selected any users?</div>
 		}
 
-		return(
-			<div>
-				<div>
-					{friendButtons}
-					{selectedFriendsList}
+		if(this.state.steamid){
+			return(
+				<div className = "container">
+					<div className = "main-row">
+						<div className = "friend-column">
+							{friendButtons}
+						</div>
+						<div className = "games-and-selected">
+							<div className = "selected-friends">
+								{selectedFriendsList}
+							</div>
+							<div className = "games-column">
+								{gamesButtons}
+							</div>
+						</div>
+					</div>
 				</div>
-				<div>
-					{gamesButtons}
+			);
+		} else {
+			return(
+				<div className = "container">
+					hey, why isn't there a steamid for me to check??
 				</div>
-			</div>
-		);
+			)
+		}
 	}
-}
+}//
 
 //returns promise object given HTTP method and url
 const SendHttpRequest = (method, url) => {
@@ -206,7 +191,11 @@ const getRequest = (url) => {
 const getSteamFriends = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/ISteamUser/GetFriendList/v1/";
 	let response = await getRequest(proxy + baseUrl + "?key="+ apiKey + "&steamid=" + userID);
-	return response.friendslist.friends;
+	if(response != null){
+		return response.friendslist.friends;
+	} else {
+		return [];
+	}
 }
 
 //returns an array of player summaries given an array of steamIDs
@@ -245,20 +234,56 @@ function getGamesInCommon(userObjects) {
 	return innerJoinObjectsMany(libraries, 'appid');
 }
 
-//gets the image urls given an array of games
-const getGameImages = async(games) => {
-
+function makeGameButton(game) {
+	if(game.img_logo_url !== ""){
+		return (
+			<li key = {game.appid}>
+				<button className = 'game-button' onClick = {function() {
+					console.log(game);
+					console.log(game.img_logo_url);
+					window.open("https://store.steampowered.com/app/"+game.appid);
+				}}>
+					<img
+						alt = {game.name}
+						src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" + game.appid + "/" + game.img_logo_url + ".jpg"}
+					>
+					</img>
+					{//game.name}
+					}
+				</button>
+			</li>
+		)
+	}
 }
 
-//take a game object, add game tags to the object
-function getGameTags(game) {
-
-}
-
-//takes an image url, a redirect url, and a caption
-//returns an html element
-function createImage(imgurl, clickurl, caption) {
-
+function makeSelectorButton (listObjs, alphaParam, currComponent) {
+	return (
+		alphabetizeObjects(listObjs, alphaParam)
+		.map((person, index) => (
+			<li key = {person['steamid']}>
+				<button className = 'friend-button' onClick = {
+						function() {
+							let ind = currComponent.state.selectedFriends.indexOf(person);
+							let newSelected;
+							if(ind > -1) {
+						newSelected = currComponent.state.selectedFriends;
+						newSelected.splice(ind, 1);
+							} else {
+						newSelected = currComponent.state.selectedFriends;
+						newSelected.push(person);
+							}
+								console.log("added/removed " + person.personaname);
+								currComponent.setState({selectedFriends: newSelected});
+								currComponent.handleGamesList();
+								console.log("Refreshing...");
+							}
+						}>
+					<img src={person.avatar} alt = {person.personaname}></img>
+					<span>{person.personaname}</span>
+				</button>
+			</li>
+		))
+	)
 }
 
 //returns inner join of many arrays of objects by some parameter

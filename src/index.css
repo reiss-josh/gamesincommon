@@ -1,0 +1,68 @@
+body {
+  background-color: #262931;
+  color: #6fb3d3;
+}
+
+.main-row {
+  padding: 10px 0;
+  display:flex;
+}
+
+.friend-column {
+  flex: 0em 0em 20em;
+}
+
+.friend-column ul li {
+  margin: 0 0 3px 0;
+}
+
+.selected-friends ul li {
+  margin: 0 0 3px 0;
+}
+
+ul li {
+  list-style-type: none;
+}
+
+.games-and-selected{
+  margin: 0px 0px 0px 30px;
+}
+
+.games-column ul li{
+  float: left;
+}
+
+.friend-button {
+  width: 175px;
+  border: 2px solid #75a72d;
+  background-color: #262931;
+  color: #6fb3d3;
+  padding: 3px 0px;
+  text-align: center;
+}
+
+.friend-button img 
+{  
+	display: inline-block;
+  vertical-align: middle;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.friend-button span
+{
+	display:inline-block;
+  width: 120px;
+  vertical-align:middle;
+}
+
+.game-button {
+  text-align: center;
+  display: inline-block;
+  font-size: 0px;
+  padding: 2px 3px;
+  text-align: center;
+  background-color: #262931;
+  border: none;
+}
+

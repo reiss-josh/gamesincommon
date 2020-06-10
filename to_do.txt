@@ -1,23 +1,17 @@
 final app:
 
-login page -- leads to main page, passes logged in info
+BIG STUFF:
+* add a login page -- leads to main page, passes logged in info
+* hand off network requests somehow -- don't expose api key.
 
-hand off network requests somehow -- don't expose api key.
+* allow scrolling of the friends/games list separate from scrolling the page
+* format the buttons/lists to look nice
+* offer a loading circle while games list is being updated
+  -> after some time out period, show the currently present error message
+* make page resize to fit window
 
-add pictures of friends
-  -- memoize friend libraries
-include sort options
-  -- take inner OR full join of tags, by user choice
-  -- sort by order chosen
-
-tags:
-  online multiplayer
-  local/splitscreen
-  remote play
-  controller support
-  unplayed
-
-sorts:
+UNKNOWN SIZE STUFF:
+add particular sorts:
   logged user hours
   all selected user hours
   alphabetized
