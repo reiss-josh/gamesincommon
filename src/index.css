@@ -14,19 +14,27 @@ body {
 }
 
 .friend-column {
-  margin: 0px 1vw;
-  padding: 0px 0vw;
+  margin: 0px 0px;
+  padding: 0px 0px;
   overflow:auto;
   direction: rtl;
   height:96.5vh;
-  min-width: 180px;
+  min-width: 150px;
   max-width: 230px;
   width: 4000vw;
 }
 
 .games-column {
   overflow:auto;
-  height: calc(77.5vh + 6vw);
+  height: 96.5vh;
+}
+
+.games-scroll {
+  margin: 0px 0px 0px 0px;
+}
+
+.friend-scroll {
+  margin: 0px 7.5px 0px 0px;
 }
 
 .friend-column ul li {

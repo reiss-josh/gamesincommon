@@ -3,6 +3,9 @@ final app:
 BIG STUFF:
 * add a login page -- leads to main page, passes logged in info
 * hand off network requests somehow -- don't expose api key.
+* fix left-side margin on scroll for mobile/extremely thin window
+* remove the "selected friends" menu and instead just change the border color on selected friends
+  -> partially done
 
 LESS IMPORTANT:
 * offer a loading circle while games list is being updated

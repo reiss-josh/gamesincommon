@@ -135,14 +135,18 @@ class FriendsGamesList extends React.Component {
 				<div className = "container">
 					<div className = "main-row">
 						<div className = "friend-column">
-							{friendButtons}
+							<div className = "friend-scroll">
+								{friendButtons}
+							</div>
 						</div>
 						<div className = "games-and-selected">
 							<div className = "selected-friends">
-								{selectedFriendsList}
+								
 							</div>
 							<div className = "games-column">
-								{gamesButtons}
+								<div className = "games-scroll">
+									{gamesButtons}
+								</div>
 							</div>
 						</div>
 					</div>
