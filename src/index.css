@@ -26,19 +26,28 @@ ul li {
 
 .games-and-selected{
   margin: 0px 0px 0px 30px;
+  float: none;
+  display: flex;
+  flex-direction: column;
 }
 
-.games-column ul li{
+.games-column li{
+  float: left;
+}
+
+.selected-friends li{
   float: left;
 }
 
 .friend-button {
+  display: inline-block;
   width: 175px;
   border: 2px solid #75a72d;
   background-color: #262931;
   color: #6fb3d3;
   padding: 3px 0px;
   text-align: center;
+  
 }
 
 .friend-button img 
@@ -65,4 +74,3 @@ ul li {
   background-color: #262931;
   border: none;
 }
-
