@@ -16,10 +16,21 @@ body {
 .friend-column {
   margin: 0px 1vw;
   padding: 0px 0vw;
+  overflow:auto;
+  direction: rtl;
+  height:96.5vh;
+  min-width: 180px;
+  max-width: 230px;
+  width: 4000vw;
+}
+
+.games-column {
+  overflow:auto;
+  height: calc(77.5vh + 6vw);
 }
 
 .friend-column ul li {
-  margin: 0px 0 4px 0; 
+  margin: 0px 0 4px 0;
 }
 
 .selected-friends ul li {
