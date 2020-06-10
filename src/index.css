@@ -1,3 +1,8 @@
+* {    
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: #262931;
   color: #6fb3d3;
@@ -9,15 +14,17 @@ body {
 }
 
 .friend-column {
-  flex: 0em 0em 20em;
+  margin: 0px 1vw;
+  padding: 0px 0vw;
 }
 
 .friend-column ul li {
-  margin: 0 0 3px 0;
+  margin: 0px 0 4px 0; 
 }
 
 .selected-friends ul li {
-  margin: 0 0 3px 0;
+  margin: 0 6px 3px 0;
+  float: left;
 }
 
 ul li {
@@ -25,7 +32,7 @@ ul li {
 }
 
 .games-and-selected{
-  margin: 0px 0px 0px 30px;
+  margin: 0px 0px 0px 1vw;
   float: none;
   display: flex;
   flex-direction: column;
@@ -35,19 +42,23 @@ ul li {
   float: left;
 }
 
-.selected-friends li{
-  float: left;
+.selected-friends{
+  margin: 00px 0px 00px 3px;
 }
 
 .friend-button {
   display: inline-block;
-  width: 175px;
+  width: 13vw;
+  min-width: 130px;
+  max-width: 180px;
+  height: calc(120px - 3.25vw);
+  max-height: 85px;
+  min-height: 46px;
   border: 2px solid #75a72d;
   background-color: #262931;
   color: #6fb3d3;
-  padding: 3px 0px;
+  padding: 0px 0px 0px 0px;
   text-align: center;
-  
 }
 
 .friend-button img 

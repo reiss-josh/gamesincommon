@@ -8,7 +8,6 @@ BIG STUFF:
 * format the buttons/lists to look nice
 * offer a loading circle while games list is being updated
   -> after some time out period, show the currently present error message
-* make page resize to fit window
 
 UNKNOWN SIZE STUFF:
 add particular sorts:
