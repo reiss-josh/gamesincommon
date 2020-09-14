@@ -4,9 +4,9 @@ import './index.css';
 //redirect here from login page.
 //somehow retrieve steamid from the login ???
 var PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
-var STEAM_ID_USER = "76561198041117535";
+var STEAM_ID_USER = "INSERT YOUR STEAM ID HERE!";
 //var STEAM_ID_USER = "";
-var API_KEY_USER = "E1D16427E370EA735611B2EF484399A4";
+var API_KEY_USER = "INSERT YOUR API KEY HERE!";
 
 class FriendsGamesList extends React.Component {
 	constructor(props) {
