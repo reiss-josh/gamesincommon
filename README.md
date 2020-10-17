@@ -11,7 +11,7 @@ In the meantime, if you want to try it out:
 4) add the data from steps 1-3 into "example_jsenv.js"
 5) rename "example_jsenv.js" to "jsenv.js"
 6) drag "jsenv.js" into the /src folder
-7) run "npm start" in this directory. 
+7) run "npm start" in this directory. (you might need to run "npm install" first)
 
 Here are some screenshots of the working application:
 ![](screencaps/wide_view.png)

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
   person: '',
@@ -14,14 +15,18 @@ class SelectorButton extends Component {
 
   render(){
     let currButton = this;
-    this.state = this.props;
+    if(this.state.person == ''){
+      this.setState({person: this.props.person});
+      this.setState({currComponent: this.props.currComponent})
+    }
     const {
       person,
       currComponent,
       isClicked,
     } = this.state;
+
     return (
-      <button className = 'friend-button' onClick = {
+      <button className = {isClicked ? 'friend-button-on' : 'friend-button'} onClick = {
         function() {
           console.log(process.env);
           let ind = currComponent.state.selectedFriends.indexOf(person);
