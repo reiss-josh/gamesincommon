@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-//redirect here from login page.
-//somehow retrieve steamid from the login ???
-var PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
-var STEAM_ID_USER = "INSERT YOUR STEAM ID HERE!";
-//var STEAM_ID_USER = "";
-var API_KEY_USER = "INSERT YOUR API KEY HERE!";
+import SelectorButton from './components/selectorButton';
+import {alphabetizeObjects, sepMissingParams, joinMissingParams,
+				innerJoinObjectsTwo, innerJoinObjectsMany} from './utilities/generic_utils.js';
+import {SendHTTPRequest, getRequest} from './utilities/http_utils.js';
+import {getSteamFriends, getPlayerSummaries,
+				getSteamGamesMultiple, getGamesInCommon} from './utilities/steamAPI_utils.js';
+
+//need to get this information from a login page instead
+import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from './jsenv.js';
 
 class FriendsGamesList extends React.Component {
 	constructor(props) {
-		super(props);
+		super();
 		this.state = {
 			steamid: STEAM_ID_USER,
 			friends: [],
@@ -83,6 +86,38 @@ class FriendsGamesList extends React.Component {
 		return gamesInCommon;
 	}
 
+	//todo: this should be in another file
+	makeGameButton(game) {
+		if(game.img_logo_url !== ""){
+			return (
+				<li key = {game.appid}>
+					<button className = 'game-button' onClick = {function() {
+						window.open("https://store.steampowered.com/app/"+ game.appid);
+					}}>
+						<img
+							alt = {game.name}
+							src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" +
+											game.appid + "/" + game.img_logo_url + ".jpg"}
+						>
+						</img>
+					</button>
+				</li>
+			)
+		}
+	}
+
+	//todo: this should be in another file
+	makeSelectorButton (listObjs, alphaParam, currComponent) {
+		return (
+			alphabetizeObjects(listObjs, alphaParam)
+			.map((person, index) => (
+				<li key = {person['steamid']}>
+					<SelectorButton person = {person} currComponent = {currComponent}/>
+				</li>
+			))
+		)
+	}
+
 	async componentDidMount() {
 		//get the friends list, fill out its properties, then store it
 		if(this.state.steamid == null){
@@ -94,36 +129,27 @@ class FriendsGamesList extends React.Component {
 
 	render() {
 		let currComponent = this; //cache reference for the "setState" in here
-		let friendButtons, selectedFriendsList, gamesButtons;
+		let friendButtons, gamesButtons;
 
+		//todo: this should be in another file
 		//friend list JSX
 		if(this.state.friends && this.state.friends.length > 0){
 			friendButtons =
-			<ul>
-				{makeSelectorButton(this.state.friends, 'personaname', currComponent)}
-			</ul>
+			<ul>{
+				this.makeSelectorButton(this.state.friends, 'personaname', currComponent)
+			}</ul>
 		} else {
 			friendButtons = <div>do you not have any friends??</div>
 		}
 
-		//selected friends JSX
-		if(this.state.selectedFriends && this.state.selectedFriends.length > 0)
-		{
-			selectedFriendsList =
-			<ul>{
-				makeSelectorButton(this.state.selectedFriends, 'personaname', currComponent)
-			}</ul>
-		} else {
-			selectedFriendsList = <div>you need to select some friends!!</div>
-		}
-
+		//todo: this should be in another file
 		//games list JSX
 		if(this.state.games && this.state.games.length > 0){
 			gamesButtons =
 			<ul> {
 				alphabetizeObjects(this.state.games, 'name')
 				.map((game, index) => (
-					makeGameButton(game)
+					this.makeGameButton(game)
 				))
 			} </ul>
 		} else {
@@ -139,14 +165,9 @@ class FriendsGamesList extends React.Component {
 								{friendButtons}
 							</div>
 						</div>
-						<div className = "games-and-selected">
-							<div className = "selected-friends">
-								
-							</div>
-							<div className = "games-column">
-								<div className = "games-scroll">
-									{gamesButtons}
-								</div>
+						<div className = "games-column">
+							<div className = "games-scroll">
+								{gamesButtons}
 							</div>
 						</div>
 					</div>
@@ -160,203 +181,15 @@ class FriendsGamesList extends React.Component {
 			)
 		}
 	}
-}//
-
-//returns promise object given HTTP method and url
-const SendHttpRequest = (method, url) => {
-  const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.responseType = 'json';
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.onload = () => {
-      resolve(xhr.response);
-    };
-    xhr.send();
-  });
-  return promise;
-};
-
-//returns the result from a GET request at a given url
-const getRequest = (url) => {
-	let dataGet = SendHttpRequest('GET', url);
-	return (
-		dataGet
-			.then(responseData => {
-				return responseData;
-			})
-			.catch(function(error) {
-				console.log(error.message);
-			} )
-	)
 }
 
-//returns an array of friend objects given a steamid
-const getSteamFriends = async (userID, apiKey, proxy = "") => {
-	const baseUrl = "https://api.steampowered.com/ISteamUser/GetFriendList/v1/";
-	let response = await getRequest(proxy + baseUrl + "?key="+ apiKey + "&steamid=" + userID);
-	if(response != null){
-		return response.friendslist.friends;
-	} else {
-		return [];
-	}
-}
+//HELPER FUNCTIONS
+//todo: export all the below helpers to other files
 
-//returns an array of player summaries given an array of steamIDs
-const getPlayerSummaries = async(userIDs, apiKey, proxy = "") => {
-	const baseUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/";
-	let userIDsString;
-	userIDs.map((id) => userIDsString += "," + id);
-	userIDsString = userIDsString.substr(1);
-	let response = await getRequest(proxy + baseUrl + "?key=" + apiKey + "&steamids=" + userIDsString);
-	return response.response.players;
-}
 
-//retuns game library (an array of game objects) given a steamID
-const getSteamGames = async (userID, apiKey, proxy = "") => {
-	const baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
-	let response = await getRequest(proxy + baseUrl + "?key=" + apiKey + "&steamid=" + userID
-																	+ "&include_appinfo=true&include_player_free_games=true");
-	return response.response.games;
-}
 
-//returns an array of game libraries given an arrayof player objects
-const getSteamGamesMultiple = async(playerObjs) => {
-	let userIDs = playerObjs.map(a => a.steamid);
-	let allLibraries = [];
-	for(let i = 0; i < userIDs.length; i++)
-	{
-		let gms = await getSteamGames(userIDs[i], API_KEY_USER, PROXY_URL);
-		allLibraries.push({steamid: userIDs[i], gameLibrary: gms});
-	}
-	return allLibraries;	
-}
 
-//returns the inner join of multiple game libraries, given an array of player objects
-function getGamesInCommon(userObjects) {
-	let libraries = userObjects.map(u => u.gameLibrary);
-	return innerJoinObjectsMany(libraries, 'appid');
-}
 
-function makeGameButton(game) {
-	if(game.img_logo_url !== ""){
-		return (
-			<li key = {game.appid}>
-				<button className = 'game-button' onClick = {function() {
-					console.log(game);
-					console.log(game.img_logo_url);
-					window.open("https://store.steampowered.com/app/"+game.appid);
-				}}>
-					<img
-						alt = {game.name}
-						src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" + game.appid + "/" + game.img_logo_url + ".jpg"}
-					>
-					</img>
-					{//game.name}
-					}
-				</button>
-			</li>
-		)
-	}
-}
-
-function makeSelectorButton (listObjs, alphaParam, currComponent) {
-	return (
-		alphabetizeObjects(listObjs, alphaParam)
-		.map((person, index) => (
-			<li key = {person['steamid']}>
-				<button className = 'friend-button' onClick = {
-						function() {
-							let ind = currComponent.state.selectedFriends.indexOf(person);
-							let newSelected;
-							if(ind > -1) {
-						newSelected = currComponent.state.selectedFriends;
-						newSelected.splice(ind, 1);
-							} else {
-						newSelected = currComponent.state.selectedFriends;
-						newSelected.push(person);
-							}
-								console.log("added/removed " + person.personaname);
-								currComponent.setState({selectedFriends: newSelected});
-								currComponent.handleGamesList();
-								console.log("Refreshing...");
-							}
-						}>
-					<img src={person.avatar} alt = {person.personaname}></img>
-					<span>{person.personaname}</span>
-				</button>
-			</li>
-		))
-	)
-}
-
-//returns inner join of many arrays of objects by some parameter
-function innerJoinObjectsMany(arr, prop)
-{
-	let result = arr[0];
-	for(let i = 1; i < arr.length; i++){
-		result = innerJoinObjectsTwo(result, arr[i], prop);
-	}
-	return result;
-}
-
-//returns inner join of two arrays of objects by some parameter
-function innerJoinObjectsTwo(a, b, prop) {
-	let c = [];
-  for(var i = 0; i < a.length; i++) {
-    for(var j = 0; j < b.length; j++){
-      if(a[i][prop]===b[j][prop]) {
-        c.push(a[i]);
-      }
-    }
-  }
-  return c;
-}
-
-/*
-	"arrSrc" is the array we're looking at to determine what entries are missing etnries
-	"arrNew" is the array of entries that we're checking in on
-	"propCheck" is the property we're checking for missingness
-	"propIdentify" is used to identify entries in arrSrc compared with arrNew
-	returns [missingEntries],[foundEntries]
-*/
-function sepMissingParams(arrSrc, arrNew, propCheck, propIdentify){
-	let arrMissing = [];
-	let arrFound = [];
-	let foundObj;
-	arrNew.forEach(function (elt) {
-		foundObj = arrSrc.find(fnd => fnd[propIdentify] === elt[propIdentify]);
-		if(foundObj[propCheck] === null){
-			arrMissing.push(foundObj);
-		}
-		else{
-			arrFound.push(foundObj);
-		}
-	});
-	return {missing: arrMissing, found: arrFound};
-}
-
-/*
-	"arrNeedsFilling" is the source array, which has entries for which some property is null
-	"arrCanFill" is some array with key,value entries, s.t. these pairs can be used to "repair" the source array
-		--note: "arrCanFill" can have more properties than just these keys or values.
-	"propFill" is the value in these k,v pairs
-	"propIdentify" is the key in these k,v pairs
-*/
-function joinMissingParams(arrNeedsFilling, arrCanFill, propFill, propIdentify){
-	let foundObj;
-	arrNeedsFilling = arrNeedsFilling.slice(); //should ensure shallow copy?
-	for(let i = 0; i < arrCanFill.length; i++) {
-		foundObj = arrNeedsFilling.find(fnd => fnd[propIdentify] === arrCanFill[i][propIdentify]);
-		foundObj[propFill] = arrCanFill[i][propFill];
-	};
-	return arrNeedsFilling;
-}
-
-//alphabetizes an array of objects by some property
-function alphabetizeObjects(arr, prop) {
-	return arr.sort((a,b) => (a[prop].toLowerCase() > b[prop].toLowerCase()) ? 1 : -1);
-}
 
 
 ReactDOM.render(
