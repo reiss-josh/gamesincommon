@@ -13,12 +13,14 @@ class SelectorButton extends Component {
     this.state = {...INITIAL_STATE};
   }
 
+  componentDidMount(){
+    this.setState({person: this.props.person});
+    this.setState({currComponent: this.props.currComponent});
+    if(this.props.person.steamid === STEAM_ID_USER) this.setState({isClicked: true});
+  }
+
   render(){
     let currButton = this;
-    if(this.state.person == ''){
-      this.setState({person: this.props.person});
-      this.setState({currComponent: this.props.currComponent})
-    }
     const {
       person,
       currComponent,
