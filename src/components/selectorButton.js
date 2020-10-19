@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
-  person: '',
-  currComponent: null,
   isClicked: false,
 };
 
@@ -13,46 +11,26 @@ class SelectorButton extends Component {
     this.state = {...INITIAL_STATE};
   }
 
+  //if this button is the logged-in user's button, default it to Clicked.
   componentDidMount(){
-    this.setState({person: this.props.person});
-    this.setState({currComponent: this.props.currComponent});
     if(this.props.person.steamid === STEAM_ID_USER) this.setState({isClicked: true});
   }
 
+  //when we click the button, update its state and pass that update upwards to its parent.
+  onButtonClick(ref) {
+    let newClickState = !ref.state.isClicked; //store the state we are updating to
+    ref.setState({isClicked: newClickState}); //update our state
+    ref.props.handler(ref.props.person, newClickState); //tell our parent to update our state
+  }
+
   render(){
-    let currButton = this;
-    const {
-      person,
-      currComponent,
-      isClicked,
-    } = this.state;
+    let isClicked = this.state.isClicked;
+    let person = this.props.person;
 
     return (
-      <button className = {isClicked ? 'friend-button-on' : 'friend-button'} onClick = {
-        function() {
-          console.log(process.env);
-          let ind = currComponent.state.selectedFriends.indexOf(person);
-          let newSelected;
-          //remove from list
-          if(ind > -1) {
-            newSelected = currComponent.state.selectedFriends;
-            newSelected.splice(ind, 1);
-            currButton.setState({isClicked: false});
-          //add to list
-          } else {
-            newSelected = currComponent.state.selectedFriends;
-            newSelected.push(person);
-            currButton.setState({isClicked: true});
-          }
-            console.log("added/removed " + person.personaname);
-            currComponent.setState({selectedFriends: newSelected});
-            currComponent.handleGamesList();
-            console.log("Refreshing...");
-          }
-        }
-      >
-      <img src={person.avatar} alt = {person.personaname}></img>
-      <span>{person.personaname}</span>
+      <button className = {isClicked ? 'friend-button-on' : 'friend-button'} onClick={() => {this.onButtonClick(this)}}>
+        <img src={person.avatar} alt = {person.personaname}></img>
+        <span>{person.personaname}</span>
       </button>
     )
   }

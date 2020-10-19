@@ -80,6 +80,21 @@ ul li {
   text-align: center;
 }
 
+.friend-button img 
+{  
+	display: inline-block;
+  vertical-align: middle;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.friend-button span
+{
+	display:inline-block;
+  width: 120px;
+  vertical-align:middle;
+}
+
 .friend-button-on {
   display: inline-block;
   width: 13vw;
@@ -100,21 +115,6 @@ ul li {
   vertical-align: middle;
   padding: 5px;
   border-radius: 5px;
-}
-
-.friend-button img 
-{  
-	display: inline-block;
-  vertical-align: middle;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.friend-button span
-{
-	display:inline-block;
-  width: 120px;
-  vertical-align:middle;
 }
 
 .friend-button-on span

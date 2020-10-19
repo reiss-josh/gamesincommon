@@ -1,26 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import SelectorButton from './components/selectorButton';
-import {alphabetizeObjects, sepMissingParams, joinMissingParams,
-				innerJoinObjectsTwo, innerJoinObjectsMany} from './utilities/generic_utils.js';
-import {SendHTTPRequest, getRequest} from './utilities/http_utils.js';
+import SelectorButtonHolder from './components/selectorButtonHolder';
+import {alphabetizeObjects, sepMissingParams, joinMissingParams} from './utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
 				getSteamGamesMultiple, getGamesInCommon} from './utilities/steamAPI_utils.js';
 
 //need to get this information from a login page instead
 import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from './jsenv.js';
 
+const INITIAL_STATE = {
+  steamid: STEAM_ID_USER,
+	friends: [],
+	selectedFriends: [],
+	games: [],
+	selectorButton: null,
+};
+
 class FriendsGamesList extends React.Component {
 	constructor(props) {
 		super();
-		this.state = {
-			steamid: STEAM_ID_USER,
-			friends: [],
-			selectedFriends: [],
-			games: [],
-		};
+		this.state = {...INITIAL_STATE};
+
+		this.updateSelectedFriends = this.updateSelectedFriends.bind(this);
   }
+
+	updateSelectedFriends(newSelected) {
+		this.setState({selectedFriends: newSelected});
+		this.handleGamesList();
+	}
 
 	handleFriendsList = async() => {
 		console.log("handling friends list...");
@@ -35,11 +43,13 @@ class FriendsGamesList extends React.Component {
 		summariesResult.forEach(function (a) {
 			a.gameLibrary = null;
 		});
-		this.setState({friends: summariesResult});
-
-		//init our selected list with the logged-in user
+		
+		//get the object of the currently-logged-in user
 		let userObject = [summariesResult.filter(obj => {return obj.steamid === STEAM_ID_USER})[0]];
+
+		//update object state
 		this.setState({selectedFriends: userObject});
+		this.setState({friends: summariesResult});
 		return summariesResult;
 	}
 
@@ -106,18 +116,6 @@ class FriendsGamesList extends React.Component {
 		}
 	}
 
-	//todo: this should be in another file
-	makeSelectorButton (listObjs, alphaParam, currComponent) {
-		return (
-			alphabetizeObjects(listObjs, alphaParam)
-			.map((person, index) => (
-				<li key = {person['steamid']}>
-					<SelectorButton person = {person} currComponent = {currComponent}/>
-				</li>
-			))
-		)
-	}
-
 	async componentDidMount() {
 		//get the friends list, fill out its properties, then store it
 		if(this.state.steamid == null){
@@ -125,24 +123,26 @@ class FriendsGamesList extends React.Component {
 		}
 		await this.handleFriendsList();
 		await this.handleGamesList();
+
+		this.setState({selectorButton: 
+			<SelectorButtonHolder
+			friendsList = {this.state.friends}
+			alphaParam = {'personaname'}
+			selectedFriends = {this.state.selectedFriends}
+			handler = {this.updateSelectedFriends}/>
+		});
 	}
 
 	render() {
 		let currComponent = this; //cache reference for the "setState" in here
 		let friendButtons, gamesButtons;
 
-		//todo: this should be in another file
+		//todo: this shouldn't all be happening in render, right?
 		//friend list JSX
-		if(this.state.friends && this.state.friends.length > 0){
-			friendButtons =
-			<ul>{
-				this.makeSelectorButton(this.state.friends, 'personaname', currComponent)
-			}</ul>
-		} else {
-			friendButtons = <div>do you not have any friends??</div>
-		}
+		friendButtons = (this.state.friends && this.state.friends.length > 0) ?
+										this.state.selectorButton : <div>do you not have any friends??</div>;
 
-		//todo: this should be in another file
+		//todo: this shouldn't all be happening in render
 		//games list JSX
 		if(this.state.games && this.state.games.length > 0){
 			gamesButtons =
@@ -182,15 +182,6 @@ class FriendsGamesList extends React.Component {
 		}
 	}
 }
-
-//HELPER FUNCTIONS
-//todo: export all the below helpers to other files
-
-
-
-
-
-
 
 ReactDOM.render(
 	<div>
