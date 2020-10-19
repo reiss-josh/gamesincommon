@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import SelectorButtonHolder from './components/selectorButtonHolder';
+import GameButtonHolder from './components/gameButtonHolder';
 import {alphabetizeObjects, sepMissingParams, joinMissingParams} from './utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
 				getSteamGamesMultiple, getGamesInCommon} from './utilities/steamAPI_utils.js';
@@ -15,6 +16,7 @@ const INITIAL_STATE = {
 	selectedFriends: [],
 	games: [],
 	selectorButton: null,
+	gamesButtons: null,
 };
 
 class FriendsGamesList extends React.Component {
@@ -92,28 +94,13 @@ class FriendsGamesList extends React.Component {
 
 		//get gamesInCommon, now that we have all our data
 		let gamesInCommon = getGamesInCommon(allLibraries);
-		this.setState({games: gamesInCommon});
-		return gamesInCommon;
-	}
-
-	//todo: this should be in another file
-	makeGameButton(game) {
-		if(game.img_logo_url !== ""){
-			return (
-				<li key = {game.appid}>
-					<button className = 'game-button' onClick = {function() {
-						window.open("https://store.steampowered.com/app/"+ game.appid);
-					}}>
-						<img
-							alt = {game.name}
-							src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" +
-											game.appid + "/" + game.img_logo_url + ".jpg"}
-						>
-						</img>
-					</button>
-				</li>
-			)
+		this.setState({games: gamesInCommon}); //update stored games
+		
+		if(this.state.gamesButtons){ //need to pass updated games list down
+			let beep = this.state.gamesButtons;
+			beep.coolFunction("hee")
 		}
+		return gamesInCommon;
 	}
 
 	async componentDidMount() {
@@ -131,6 +118,11 @@ class FriendsGamesList extends React.Component {
 			selectedFriends = {this.state.selectedFriends}
 			handler = {this.updateSelectedFriends}/>
 		});
+
+		this.setState({gamesButtons:
+			<GameButtonHolder
+			gamesList = {this.state.games}/>
+		});
 	}
 
 	render() {
@@ -145,13 +137,7 @@ class FriendsGamesList extends React.Component {
 		//todo: this shouldn't all be happening in render
 		//games list JSX
 		if(this.state.games && this.state.games.length > 0){
-			gamesButtons =
-			<ul> {
-				alphabetizeObjects(this.state.games, 'name')
-				.map((game, index) => (
-					this.makeGameButton(game)
-				))
-			} </ul>
+			gamesButtons = this.state.gamesButtons;
 		} else {
 			gamesButtons = <div>you have no games in common!! is one of your friends' games library private? maybe you haven't selected any users?</div>
 		}
