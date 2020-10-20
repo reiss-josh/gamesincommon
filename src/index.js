@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import SelectorButtonHolder from './components/selectorButtonHolder';
 import GameButtonHolder from './components/gameButtonHolder';
-import {getSteamFriends, getPlayerSummaries} from './utilities/steamAPI_utils.js';
-
-//need to get this information from a login page instead
 import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from './jsenv.js';
+
+
 
 const INITIAL_STATE = {
   steamid: STEAM_ID_USER,
@@ -24,44 +23,16 @@ class FriendsGamesList extends React.Component {
 		this.updateSelectedFriends = this.updateSelectedFriends.bind(this);
   }
 
-	updateSelectedFriends(newSelected) {
-		this.setState({selectedFriends: newSelected});
-		this.gamesButtons.current.handleGamesList(this.state.friends, this.state.selectedFriends);
-	}
-
-	handleFriendsList = async() => {
-		console.log("handling friends list...");
-		//get friends
-		let friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
-		const loginObject = {steamid: STEAM_ID_USER, realtionship: "self", friend_since: 0}; //add logged in user to list
-		friendsResult.push(loginObject);
-		//get summaries
-		let idArray = friendsResult.map(a => a.steamid);
-		let summariesResult = await getPlayerSummaries(idArray, API_KEY_USER, PROXY_URL);
-		//clean up
-		summariesResult.forEach(function (a) {
-			a.gameLibrary = null;
-		});
-		
-		//get the object of the currently-logged-in user
-		let userObject = [summariesResult.filter(obj => {return obj.steamid === STEAM_ID_USER})[0]];
-
-		//update object state
-		this.setState({selectedFriends: userObject});
-		this.setState({friends: summariesResult});
-		return summariesResult;
+	updateSelectedFriends(newGames) {
+		//this.setState({selectedFriends: newSelected});
+		//this.gamesButtons.current.handleGamesList(this.state.friends, this.state.selectedFriends);
+		this.gamesButtons.current.updateGameButtons(newGames);
 	}
 
 	async componentDidMount() {
 		//get the friends list, fill out its properties, then store it
 		if(this.state.steamid == null){
 			return;
-		}
-
-		await this.handleFriendsList();
-
-		if(this.gamesButtons.current){ //need to pass updated games list down
-			await this.gamesButtons.current.handleGamesList(this.state.friends, this.state.selectedFriends); //todo: need to make this work
 		}
 
 		this.setState({selectorButton:

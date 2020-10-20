@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import SelectorButton from './selectorButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
+import {getSteamFriends, getPlayerSummaries} from '../utilities/steamAPI_utils.js';
+import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
+import {getSteamGamesMultiple, getGamesInCommon} from '../utilities/steamAPI_utils.js';
+//need to get this information from a login page instead
+import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
-  selectedFriends: null,
+  friendsList: [],
+  selectedFriends: [],
   selectorButtonArray: [],
+  gamesList: [],
 };
 
 class SelectorButtonHolder extends Component {
@@ -14,6 +21,64 @@ class SelectorButtonHolder extends Component {
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
+
+  //todo: make this less of a horrible mess
+	handleGamesList = async(friends, selectedFriends) => {
+		console.log("handling games list...");
+		this.setState({gamesList: []}); //resets list --- should start up a "loading" image around here
+		let currFrns = friends;
+		let currSelected = selectedFriends;
+
+		//determine what data has/hasn't been memoized; retrieve it
+		let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
+    //console.log(missFound);
+
+		//look up the missing data
+		let allLibraries = [];
+		if(missFound.missing.length > 0){ //if there's anything missing...
+			let missingLibraries = await getSteamGamesMultiple(missFound.missing);
+			allLibraries = allLibraries.concat(missingLibraries);
+		};
+		
+		//memoize the missing data, now that we've grabbed it
+		if(allLibraries.length > 0){ //if we found something above...
+			joinMissingParams(missFound.missing, allLibraries, 'gameLibrary', 'steamid');
+		};
+
+		//make sure that we actually use the memoized data
+		allLibraries = allLibraries.concat(missFound.found);
+
+		//get gamesInCommon, now that we have all our data
+		let gamesInCommon = getGamesInCommon(allLibraries);
+		this.setState({gamesList: gamesInCommon}); //update stored games
+		//this.setState({gamesButtonArray: this.generateGameButtons(gamesInCommon, 'name')});
+    this.props.handler(gamesInCommon);
+    
+		return gamesInCommon;
+  }
+  
+  handleFriendsList = async() => {
+		console.log("handling friends list...");
+		//get friends
+		let friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)
+		const loginObject = {steamid: STEAM_ID_USER, realtionship: "self", friend_since: 0}; //add logged in user to list
+		friendsResult.push(loginObject);
+		//get summaries
+		let idArray = friendsResult.map(a => a.steamid);
+		let summariesResult = await getPlayerSummaries(idArray, API_KEY_USER, PROXY_URL);
+		//clean up
+		summariesResult.forEach(function (a) {
+			a.gameLibrary = null;
+		});
+		
+		//get the object of the currently-logged-in user
+		let userObject = [summariesResult.filter(obj => {return obj.steamid === STEAM_ID_USER})[0]];
+
+		//update object state
+		this.setState({selectedFriends: userObject});
+		this.setState({friendsList: summariesResult});
+		return summariesResult;
+	}
 
   //when a child SelectorButton is clicked, it calls this function.
   //it takes a person  object and a boolean.
@@ -29,7 +94,8 @@ class SelectorButtonHolder extends Component {
     } //update both this object's state and the parent object's state.
     console.log("added/removed " + person.personaname);
     this.setState({selectedFriends: newSelected});
-    this.props.handler(newSelected);
+    this.handleGamesList(this.state.friendsList, newSelected);
+    //this.props.handler(newSelected);
     console.log("Refreshing...");
   }
 
@@ -44,13 +110,15 @@ class SelectorButtonHolder extends Component {
   }
 
   //update state based on passed props once mounted
-  componentDidMount(){
-    this.setState({selectedFriends: this.props.selectedFriends});
-    this.setState({selectorButtonArray: this.generateButtons(this.props.friendsList, this.props.alphaParam)});
+  async componentDidMount(){
+    await this.handleFriendsList();
+    await this.handleGamesList(this.state.friendsList, this.state.selectedFriends);
+
+    this.setState({selectorButtonArray: this.generateButtons(this.state.friendsList, this.props.alphaParam)});
   }
 
   render(){
-    if(this.props.friendsList != null){
+    if(this.state.friendsList != null){
       return(
         <ul>{this.state.selectorButtonArray}</ul>
       )
