@@ -4,34 +4,31 @@ import {alphabetizeObjects} from '../utilities/generic_utils.js';
 
 
 const INITIAL_STATE = {
-	gamesList: [],
 	gamesButtonArray: [],
 };
 
 class GameButtonHolder extends Component{
   constructor(props){
-    super();
+		super();
+		
+		this.state = {...INITIAL_STATE};
 	}
 
 	updateGameButtons(gamesList){
-		this.setState({gamesButtonArray: this.generateGameButtons(gamesList, this.props.alphaparam)});
+		this.setState({gamesButtonArray: this.generateGameButtons(gamesList)});
 	}
 
-	generateGameButtons(gamesList, alphaparam){
+	generateGameButtons(gamesList){
 		return alphabetizeObjects(gamesList, 'name')
 		.map((game, index) => (
 			<GameButton game = {game}/>
 		))
 	}
 
-  componentDidMount(){
-		//this.setState({gamesList: this.props.gamesList});
-  }
-
   render(){
     if(this.state){
-    return(
-			<ul> {this.state.gamesButtonArray} </ul>
+    	return(
+				<ul> {this.state.gamesButtonArray} </ul>
 			)
     } else {
       return("");

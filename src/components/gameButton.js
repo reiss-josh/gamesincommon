@@ -16,8 +16,7 @@ class GameButton extends Component{
 						<img
 							alt = {game.name}
 							src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" +
-											game.appid + "/" + game.img_logo_url + ".jpg"}
-						>
+											game.appid + "/" + game.img_logo_url + ".jpg"}>
 						</img>
 					</button>
 				</li>

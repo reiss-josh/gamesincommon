@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
 import SelectorButtonHolder from './components/selectorButtonHolder';
 import GameButtonHolder from './components/gameButtonHolder';
-import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from './jsenv.js';
-
-
+import {STEAM_ID_USER} from './jsenv.js';
 
 const INITIAL_STATE = {
-  steamid: STEAM_ID_USER,
-	friends: [],
-	selectedFriends: [],
 	selectorButton: null,
 };
 
@@ -23,15 +19,12 @@ class FriendsGamesList extends React.Component {
 		this.updateSelectedFriends = this.updateSelectedFriends.bind(this);
   }
 
-	updateSelectedFriends(newGames) {
-		//this.setState({selectedFriends: newSelected});
-		//this.gamesButtons.current.handleGamesList(this.state.friends, this.state.selectedFriends);
-		this.gamesButtons.current.updateGameButtons(newGames);
+	updateSelectedFriends(newGamesList) {
+		this.gamesButtons.current.updateGameButtons(newGamesList);
 	}
 
 	async componentDidMount() {
-		//get the friends list, fill out its properties, then store it
-		if(this.state.steamid == null){
+		if(STEAM_ID_USER == null){
 			return;
 		}
 
@@ -45,16 +38,12 @@ class FriendsGamesList extends React.Component {
 	}
 
 	render() {
-		let friendButtons, gamesButtons;
-
 		//friend list JSX
-		friendButtons = this.state.selectorButton;
-
+		let friendButtons = this.state.selectorButton;
 		//games list JSX
-		gamesButtons = <GameButtonHolder ref = {this.gamesButtons}
-										gamesList = {[]}/>
+		let gamesButtons = <GameButtonHolder ref = {this.gamesButtons}/>
 
-		if(this.state.steamid){
+		if(STEAM_ID_USER){
 			return(
 				<div className = "container">
 					<div className = "main-row">
