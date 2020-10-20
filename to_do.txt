@@ -1,11 +1,35 @@
 final app:
 
+CURRENT STUFF:
+  selectorButtonHolder should contain literally all of the logic for managing the page.
+  gameButtonHolder should be a ref that gets updated with what games it should be displaying. it should be totally dumb.
+  
+  process:
+    1) move HandleGames and HandleFriends into selectorButtonHolder.
+    2) move all states (other than gameButtonHolder.gamesList) into selectorButtonHolder.
+    3) give index a function which takes a gameslist and passes it to gameButtonHolder.
+    4) update selectorButtonHolder so its handler function is the one defined in 3.
+
+    now, all index has to do is:
+      define and render selectorButtonHolder
+      define and render gameButtonHolder and save it as a ref
+      hold the handler function that passes the games list up out of selectorButtonHolder and down into gameButtonHolder
+
+    selectorButtonHolder:
+      does all calls to the api
+      handles button clicks
+      updates the games list based on selected HandleFriends
+
+    gameButtonHolder:
+      literally just renders the games list, which it stores as a states
+      it has a function called updateGamesList(gamesList), which index calls since gameButtonHolder is a ref.
+
+  
+
 BIG STUFF:
 * add a login page -- leads to main page, passes logged in info
 * hand off network requests somehow -- don't expose api key.
 * fix left-side margin on scroll for mobile/extremely thin window
-* remove the "selected friends" menu and instead just change the border color on selected friends
-  -> partially done
 
 LESS IMPORTANT:
 * offer a loading circle while games list is being updated
