@@ -95,35 +95,6 @@ ul li {
   vertical-align:middle;
 }
 
-.friend-button-on {
-  display: inline-block;
-  width: 13vw;
-  min-width: 130px;
-  max-width: 180px;
-  height: calc(120px - 3.25vw);
-  max-height: 85px;
-  min-height: 46px;
-  border: 2px solid #75a72d;
-  background-color: #262931;
-  color: #6fb3d3;
-  padding: 0px 0px 0px 0px;
-  text-align: center;
-}
-
-.friend-button-on img {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.friend-button-on span
-{
-	display:inline-block;
-  width: 120px;
-  vertical-align:middle;
-}
-
 .game-button {
   text-align: center;
   display: inline-block;

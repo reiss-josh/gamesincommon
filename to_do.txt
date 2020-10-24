@@ -1,8 +1,6 @@
 final app:
 
 CURRENT STUFF:
-  clean up selectorButtonHolder
-  clean up gameButton
   made index.js a little dumber
   
 
@@ -10,6 +8,7 @@ BIG STUFF:
 * add a login page -- leads to main page, passes logged in info
 * hand off network requests somehow -- don't expose api key.
 * fix left-side margin on scroll for mobile/extremely thin window
+* hover color does not always clear properly (scrolling, the weird margin thing on thin windows)
 
 LESS IMPORTANT:
 * offer a loading circle while games list is being updated
