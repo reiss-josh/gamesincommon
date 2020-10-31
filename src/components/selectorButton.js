@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import {STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
@@ -37,28 +37,25 @@ class SelectorButton extends Component {
   }
 
   handleHover(e) {
-    if(e.target.type === 'submit')
-      e.target.style.background = '#434855'
+    //if(e.target.type === 'submit')
+    //  e.target.style.background = '#434855'
   }
 
   handleExit(e){
-    if(e.target.type === 'submit')
-      e.target.style.background = '#262931';
+    //if(e.target.type === 'submit')
+    //  e.target.style.background = '#262931';
   }
 
   render(){
     let person = this.props.person;
 
     return (
-      <div onMouseOver={this.handleHover}
-        onMouseLeave={this.handleExit}>
-        <button className = {'friend-button'}
-          onMouseDown={this.onButtonClick}
-          style = {this.getBorderColor(this)}>
-          <img src={person.avatar} alt = {person.personaname}></img>
-          <span>{person.personaname}</span>
-        </button>
-      </div>
+      <button className = {'friend-button'}
+        onMouseDown={this.onButtonClick}
+        style = {this.getBorderColor(this)}>
+        <img src={person.avatar} alt = {person.personaname}></img>
+        <span>{person.personaname}</span>
+      </button>
     )
   }
 }

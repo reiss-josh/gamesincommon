@@ -1,33 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import SelectorButton from './selectorButton.js';
 import {alphabetizeObjects, sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
         getSteamGamesMultiple, getGamesInCommon} from '../utilities/steamAPI_utils.js';
 
+import FriendsGamesContext from '../utilities/friends-games-context';
 //need to get this information from a login page instead
 import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
-  friendsList: [],
   selectedFriends: [],
   selectorButtonArray: [],
-  gamesList: [],
 };
-
 class SelectorButtonHolder extends Component {
   constructor(props) {
     super();
     this.state = {...INITIAL_STATE};
-
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
   //todo: make this less of a horrible mess
-	handleGamesList = async() => {
-		console.log("handling games list...");
-		this.setState({gamesList: []}); //resets list --- should start up a "loading" image around here
-		let currFrns = this.state.friendsList;
-		let currSelected = this.state.selectedFriends;
+	handleGamesList = async(currFrns, currSelected) => {
+    console.log("handling games list...");
+    //this.context.updateValue('gamesList',[]); //resets list --- should start up a "loading" image around here
 
 		//determine what data has/hasn't been memoized; retrieve it
 		let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
@@ -49,9 +44,9 @@ class SelectorButtonHolder extends Component {
 
 		//get gamesInCommon, now that we have all our data
 		let gamesInCommon = getGamesInCommon(allLibraries);
-		this.setState({gamesList: gamesInCommon}); //update stored games
+    this.context.updateValue('gamesList',gamesInCommon); //update stored games
 		//this.setState({gamesButtonArray: this.generateGameButtons(gamesInCommon, 'name')});
-    this.props.handler(gamesInCommon);
+    
     
 		return gamesInCommon;
   }
@@ -73,9 +68,9 @@ class SelectorButtonHolder extends Component {
 		//get the object of the currently-logged-in user
 		let userObject = [summariesResult.filter(obj => {return obj.steamid === STEAM_ID_USER})[0]];
 
-		//update object state
+    //update object state
+    this.context.updateValue('friendsList',summariesResult);
 		this.setState({selectedFriends: userObject});
-		this.setState({friendsList: summariesResult});
 		return summariesResult;
 	}
 
@@ -95,13 +90,13 @@ class SelectorButtonHolder extends Component {
     //update both this object's state and the parent object's state.
     console.log("added/removed " + person.personaname);
     this.setState({selectedFriends: newSelected});
-    this.handleGamesList();
+    this.handleGamesList(this.context.state.friendsList, this.state.selectedFriends);
     console.log("Refreshing...");
   }
 
   //generate the array of SelectorButton objects
-  generateButtons(friendsList, alphaParam){
-    return alphabetizeObjects(friendsList, alphaParam)
+  generateButtons(friendsList){
+    return alphabetizeObjects(friendsList, 'personaname')
 		.map((person, index) => (
       <li key = {person['steamid']}>
 				<SelectorButton person = {person} handler = {this.handleButtonClick}/>
@@ -112,13 +107,14 @@ class SelectorButtonHolder extends Component {
   //update state based on passed props once mounted
   async componentDidMount(){
     await this.handleFriendsList();
-    await this.handleGamesList();
+    await this.handleGamesList(this.context.state.friendsList, this.state.selectedFriends);
 
-    this.setState({selectorButtonArray: this.generateButtons(this.state.friendsList, this.props.alphaParam)});
+    this.setState({selectorButtonArray: this.generateButtons(this.context.state.friendsList)});
   }
 
   render(){
-    if(this.state.friendsList != null){
+    console.log(this.context);
+    if(this.context.state.friendsList != null){
       return(
         <ul>{this.state.selectorButtonArray}</ul>
       )
@@ -127,5 +123,6 @@ class SelectorButtonHolder extends Component {
     }
   }
 }
+SelectorButtonHolder.contextType = FriendsGamesContext;
 
 export default SelectorButtonHolder;

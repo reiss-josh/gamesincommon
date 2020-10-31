@@ -1,14 +1,22 @@
 final app:
 
 CURRENT STUFF:
-  made index.js a little dumber
+  refactor so that there doesn't need to be a Ref to gameButtonHolder anymore
+  refactor so that handleGamesList and handleFriendsList are in a helper file
+  refactor so that STEAM_ID_USER is established in a context at startup
+  empty list causes crash
   
 
 BIG STUFF:
-* add a login page -- leads to main page, passes logged in info
+* add a login page -- leads to main page, passes logged in info. store in a context.
+  -> handleFriendsList ought to use this object.
 * hand off network requests somehow -- don't expose api key.
-* fix left-side margin on scroll for mobile/extremely thin window
-* hover color does not always clear properly (scrolling, the weird margin thing on thin windows)
+* make it so that wider windows have double-wide list of friends
+* add hover coloring
+* implement firebase:
+  -> whenever about to make an API call, try checking the database first.
+  -> if it's not in the database, add it in after retrieving it.
+  (gonna store a JSON of every steam game i guess...)
 
 LESS IMPORTANT:
 * offer a loading circle while games list is being updated

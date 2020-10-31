@@ -21,7 +21,7 @@ body {
   height:96.5vh;
   min-width: 160px;
   max-width: 230px;
-  width: 4000vw;
+  width: 0vw;
 }
 
 .games-column {
@@ -69,10 +69,10 @@ ul li {
   display: inline-block;
   width: 13vw;
   min-width: 130px;
-  max-width: 180px;
+  max-width: 130px;
   height: calc(120px - 3.25vw);
   max-height: 85px;
-  min-height: 46px;
+  min-height: 85px;
   border: 2px solid #a72d2d; 
   background-color: #262931;
   color: #6fb3d3;

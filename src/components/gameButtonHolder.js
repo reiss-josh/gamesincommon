@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import GameButton from './gameButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
 
-
 const INITIAL_STATE = {
 	gamesButtonArray: [],
 };
@@ -26,6 +25,7 @@ class GameButtonHolder extends Component{
 	}
 
   render(){
+
     if(this.state){
     	return(
 				<ul> {this.state.gamesButtonArray} </ul>
