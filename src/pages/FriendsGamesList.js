@@ -3,9 +3,11 @@ import React from 'react';
 import SelectorButtonHolder from '../components/selectorButtonHolder';
 import GameButtonHolder from '../components/gameButtonHolder';
 import {STEAM_ID_USER} from '../jsenv.js';
+import {handleGamesList, handleFriendsList} from '../utilities/steamAPI_handlers.js';
 import FriendsGamesContext from '../utilities/friends-games-context';
+
 const INITIAL_STATE = {
-  selectorButtonHolder: null,
+	selectedFriends: [],
   friendsList: [],
   gamesList: [],
 };
@@ -14,25 +16,39 @@ class FriendsGamesList extends React.Component {
 	constructor(props) {
 		super();
 		this.state = {...INITIAL_STATE};
-		this.gamesButtons = React.createRef();
+		this.handleGames = this.handleGames.bind(this);
   }
   
   updateValue = (key,val) => {
-    this.setState({[key]: val});
-    if(key == 'gamesList') this.gamesButtons.current.updateGameButtons(val);
- }
+		this.setState({[key]: val});
+		if(key === 'selectedFriends') this.handleGames();
+	}
+
+	async handleGames(){
+		let gamesListResult = await handleGamesList(this.state.friendsList, this.state.selectedFriends);
+    this.setState({gamesList: gamesListResult}); //update stored games
+	}
+	
+	async componentDidMount() {
+		let friendHandled = await handleFriendsList();
+    this.setState({friendsList : friendHandled.newFriendsList});
+		this.setState({selectedFriends: friendHandled.loggedInUserObject});
+		
+		this.handleGames();
+	}
 
 	render() {
 		//friend list JSX
 		let friendButtons =
       <FriendsGamesContext.Provider value = {{state: this.state, updateValue: this.updateValue}}>
         <SelectorButtonHolder/>
-      </FriendsGamesContext.Provider>;
+      </FriendsGamesContext.Provider>
 		//games list JSX
 		let gamesButtons =
       <FriendsGamesContext.Provider value = {{state: this.state}}>
-        <GameButtonHolder ref = {this.gamesButtons}/>
+        <GameButtonHolder/>
       </FriendsGamesContext.Provider>
+    
 		if(STEAM_ID_USER){
 			return(
 				<div className = "container">

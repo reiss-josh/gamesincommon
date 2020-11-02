@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { Component } from 'react';
 import {STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {
@@ -23,7 +23,7 @@ class SelectorButton extends Component {
     if (e) {e.preventDefault()};//prevents the white outline on the button
     let newClickState = !this.state.isClicked; //store the state we are updating to
     this.setState({isClicked: newClickState}); //update our state
-    this.props.handler(this.props.person, newClickState); //tell our parent to update our state
+    this.props.handler(this.props.person, this.props.context, newClickState); //tell our parent to update our state
   }
 
   

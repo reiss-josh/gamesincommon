@@ -1,39 +1,28 @@
-import React, { Component } from 'react';
+import React, { useContext} from 'react';
 import GameButton from './gameButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
 
-const INITIAL_STATE = {
-	gamesButtonArray: [],
-};
+import FriendsGamesContext from '../utilities/friends-games-context';
 
-class GameButtonHolder extends Component{
-  constructor(props){
-		super();
-		
-		this.state = {...INITIAL_STATE};
+//generate the array of GameButton objects
+function generateGameButtons(gamesList){
+	if(gamesList){
+		return (
+			<ul>{
+				alphabetizeObjects(gamesList, 'name')
+				.map((game, index) => (
+					GameButton(game)
+				))
+			}</ul>
+		)
+	} else {
+		return <div>hey! do you not have any games in common at all??</div>
 	}
+}
 
-	updateGameButtons(gamesList){
-		this.setState({gamesButtonArray: this.generateGameButtons(gamesList)});
-	}
-
-	generateGameButtons(gamesList){
-		return alphabetizeObjects(gamesList, 'name')
-		.map((game, index) => (
-			<GameButton game = {game}/>
-		))
-	}
-
-  render(){
-
-    if(this.state){
-    	return(
-				<ul> {this.state.gamesButtonArray} </ul>
-			)
-    } else {
-      return("");
-    }
-  }
+const GameButtonHolder = () => {
+	const user = useContext(FriendsGamesContext);
+	return generateGameButtons(user.state.gamesList);
 }
 
 export default GameButtonHolder;
