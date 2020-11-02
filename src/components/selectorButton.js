@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {STEAM_ID_USER} from '../jsenv.js';
+let STEAM_ID_USER = process.env.REACT_APP_STEAM_ID_USER;
 
 const INITIAL_STATE = {
   isClicked: false,

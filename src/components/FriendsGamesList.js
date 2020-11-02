@@ -4,7 +4,7 @@ import GameButtonHolder from '../components/gameButtonHolder';
 import {handleGamesList, handleFriendsList} from '../helpers/steamAPI_handlers.js';
 import FriendsGamesContext from '../helpers/friends-games-context';
 
-import {STEAM_ID_USER} from '../jsenv.js';
+let STEAM_ID_USER = process.env.REACT_APP_STEAM_ID_USER;
 
 const INITIAL_STATE = {
 	selectedFriends: [],

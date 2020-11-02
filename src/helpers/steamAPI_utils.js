@@ -1,6 +1,8 @@
 import {getRequest} from '../utilities/http_utils.js';
 import {innerJoinObjectsMany} from '../utilities/generic_utils.js';
-import {API_KEY_USER, PROXY_URL} from '../jsenv.js';
+
+let API_KEY_USER = process.env.REACT_APP_API_KEY_USER;
+let    PROXY_URL = process.env.REACT_APP_PROXY_URL;
 
 //returns an array of friend objects given a steamid
 export const getSteamFriends = async (userID, apiKey, proxy = "") => {

@@ -8,10 +8,9 @@ In the meantime, if you want to try it out:
 1) get your steam id from your steam account
 2) get a steam api key (https://steamcommunity.com/dev/apikey)
 3) find a proxy you like (i use https://cors-anywhere.herokuapp.com/)
-4) add the data from steps 1-3 into "example_jsenv.js"
-5) rename "example_jsenv.js" to "jsenv.js"
-6) drag "jsenv.js" into the /src folder
-7) run "npm start" in this directory. (you might need to run "npm install" first)
+4) update the file ".env" with the data you got in steps 1-3
+5) run "npm install"
+6) run "npm start"
 
 Here are some screenshots of the working application:
 ![](screencaps/wide_view.png)

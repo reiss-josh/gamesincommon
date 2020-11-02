@@ -1,7 +1,10 @@
 import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
         getSteamGamesMultiple, getGamesInCommon} from './steamAPI_utils.js';
-import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from '../jsenv.js';
+
+let STEAM_ID_USER = process.env.REACT_APP_STEAM_ID_USER;
+let     PROXY_URL = process.env.REACT_APP_PROXY_URL;
+let  API_KEY_USER = process.env.REACT_APP_API_KEY_USER;
 
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected) {
