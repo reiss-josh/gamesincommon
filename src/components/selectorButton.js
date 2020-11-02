@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {STEAM_ID_USER} from '../jsenv.js';
 
 const INITIAL_STATE = {

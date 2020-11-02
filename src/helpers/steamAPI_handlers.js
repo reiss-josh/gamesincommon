@@ -1,6 +1,6 @@
 import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
-        getSteamGamesMultiple, getGamesInCommon} from '../utilities/steamAPI_utils.js';
+        getSteamGamesMultiple, getGamesInCommon} from './steamAPI_utils.js';
 import {PROXY_URL, API_KEY_USER, STEAM_ID_USER} from '../jsenv.js';
 
 //todo: make this less of a horrible mess

@@ -1,8 +1,7 @@
 import React, { useContext} from 'react';
 import SelectorButton from './selectorButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
-
-import FriendsGamesContext from '../utilities/friends-games-context';
+import FriendsGamesContext from '../helpers/friends-games-context';
 
 //generate the array of SelectorButton objects
 function generateButtons(friendsList, context){

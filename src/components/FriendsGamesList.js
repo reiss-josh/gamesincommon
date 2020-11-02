@@ -1,10 +1,10 @@
 import React from 'react';
-
 import SelectorButtonHolder from '../components/selectorButtonHolder';
 import GameButtonHolder from '../components/gameButtonHolder';
+import {handleGamesList, handleFriendsList} from '../helpers/steamAPI_handlers.js';
+import FriendsGamesContext from '../helpers/friends-games-context';
+
 import {STEAM_ID_USER} from '../jsenv.js';
-import {handleGamesList, handleFriendsList} from '../utilities/steamAPI_handlers.js';
-import FriendsGamesContext from '../utilities/friends-games-context';
 
 const INITIAL_STATE = {
 	selectedFriends: [],

@@ -1,5 +1,5 @@
-import {getRequest} from './http_utils.js';
-import {innerJoinObjectsMany} from './generic_utils.js';
+import {getRequest} from '../utilities/http_utils.js';
+import {innerJoinObjectsMany} from '../utilities/generic_utils.js';
 import {API_KEY_USER, PROXY_URL} from '../jsenv.js';
 
 //returns an array of friend objects given a steamid

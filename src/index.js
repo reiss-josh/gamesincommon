@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import FriendsGamesList from './pages/FriendsGamesList.js'
+import AppPage from './pages/AppPage.js'
 
 ReactDOM.render(
   <div>
-    <FriendsGamesList/>
+    <AppPage/>
   </div>,
   document.getElementById('root'),
 );
