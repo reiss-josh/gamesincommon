@@ -13,5 +13,10 @@ In the meantime, if you want to try it out:
 6) run "npm start"
 
 Here are some screenshots of the working application:
-![](screencaps/wide_view.png)
-![](screencaps/narrow_view.png)
+
+<img src = "screencaps/desktopcap_huge.png" height = "500">
+
+| Desktop Captures | Mobile Captures
+| --- | --- |
+| <img src = "screencaps/desktopcap_medium.png" height = "250"> | <img src = "screencaps/mobile_landscape.jpg" height = "250"> |
+| <img src = "screencaps/desktopcap_tiny.png" height = "400"> | <img src = "screencaps/mobile_portrait.jpg" height = "400"> |
