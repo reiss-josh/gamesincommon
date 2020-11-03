@@ -2,12 +2,8 @@ import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js
 import {getSteamFriends, getPlayerSummaries,
         getSteamGamesMultiple, getGamesInCommon} from './steamAPI_utils.js';
 
-let STEAM_ID_USER = process.env.REACT_APP_STEAM_ID_USER;
-let     PROXY_URL = process.env.REACT_APP_PROXY_URL;
-let  API_KEY_USER = process.env.REACT_APP_API_KEY_USER;
-
 //todo: make this less of a horrible mess
-export async function handleGamesList(currFrns, currSelected) {
+export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
   console.log("handling games list...");
 
   //determine what data has/hasn't been memoized; retrieve it
@@ -16,7 +12,7 @@ export async function handleGamesList(currFrns, currSelected) {
   //look up the missing data
   let allLibraries = [];
   if(missFound.missing.length > 0){ //if there's anything missing...
-    let missingLibraries = await getSteamGamesMultiple(missFound.missing);
+    let missingLibraries = await getSteamGamesMultiple(missFound.missing, API_KEY_USER, PROXY_URL);
     allLibraries = allLibraries.concat(missingLibraries);
   };
   
@@ -33,7 +29,7 @@ export async function handleGamesList(currFrns, currSelected) {
   return gamesInCommon;
 }
 
-export async function handleFriendsList (){
+export async function handleFriendsList (STEAM_ID_USER, API_KEY_USER, PROXY_URL){
   console.log("handling friends list...");
   //get friends
   let friendsResult = await getSteamFriends(STEAM_ID_USER, API_KEY_USER, PROXY_URL)

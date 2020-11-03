@@ -5,7 +5,6 @@ CURRENT STUFF:
   -> handleFriendsList ought to use this object.
 
 BIG STUFF:
-* refactor so that STEAM_ID_USER is established in a context at startup
 * hand off network requests somehow -- don't expose api key.
 * make it so that wider windows have double-wide list of friends
 * add hover coloring

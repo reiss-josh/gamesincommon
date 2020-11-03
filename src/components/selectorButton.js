@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-let STEAM_ID_USER = process.env.REACT_APP_STEAM_ID_USER;
+import {withSteamID} from '../helpers/SteamID';
 
 const INITIAL_STATE = {
   isClicked: false,
@@ -16,7 +15,7 @@ class SelectorButton extends Component {
 
   //if this button is the logged-in user's button, default it to Clicked.
   componentDidMount(){
-    if(this.props.person.steamid === STEAM_ID_USER) this.setState({isClicked: true});
+    if(this.props.person.steamid === this.props.steamid.steamid) this.setState({isClicked: true});
   }
 
   //when we click the button, update its state and pass that update upwards to its parent.
@@ -61,4 +60,4 @@ class SelectorButton extends Component {
   }
 }
 
-export default SelectorButton;
+export default withSteamID(SelectorButton);

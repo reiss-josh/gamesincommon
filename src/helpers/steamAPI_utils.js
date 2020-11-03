@@ -1,9 +1,6 @@
 import {getRequest} from '../utilities/http_utils.js';
 import {innerJoinObjectsMany} from '../utilities/generic_utils.js';
 
-let API_KEY_USER = process.env.REACT_APP_API_KEY_USER;
-let    PROXY_URL = process.env.REACT_APP_PROXY_URL;
-
 //returns an array of friend objects given a steamid
 export const getSteamFriends = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/ISteamUser/GetFriendList/v1/";
@@ -34,15 +31,15 @@ export const getSteamGames = async (userID, apiKey, proxy = "") => {
 }
 
 //returns an array of game libraries given an arrayof player objects
-export const getSteamGamesMultiple = async(playerObjs) => {
+export const getSteamGamesMultiple = async(playerObjs, apiKey, proxy) => {
 	let userIDs = playerObjs.map(a => a.steamid);
 	let allLibraries = [];
 	for(let i = 0; i < userIDs.length; i++)
 	{
-		let gms = await getSteamGames(userIDs[i], API_KEY_USER, PROXY_URL);
+		let gms = await getSteamGames(userIDs[i], apiKey, proxy);
 		allLibraries.push({steamid: userIDs[i], gameLibrary: gms});
 	}
-	return allLibraries;	
+	return allLibraries;
 }
 
 //returns the inner join of multiple game libraries, given an array of player objects
