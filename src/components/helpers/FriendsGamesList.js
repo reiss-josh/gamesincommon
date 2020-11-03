@@ -1,10 +1,9 @@
 import React from 'react';
-import SelectorButtonHolder from '../components/selectorButtonHolder';
-import GameButtonHolder from '../components/gameButtonHolder';
-import {handleGamesList, handleFriendsList} from '../helpers/steamAPI_handlers.js';
-import FriendsGamesContext from '../helpers/friends-games-context';
-
-import {withSteamID} from '../helpers/SteamID';
+import SelectorButtonHolder from './selectorButtonHolder';
+import GameButtonHolder from './gameButtonHolder';
+import {handleGamesList, handleFriendsList} from './steamAPI_handlers.js';
+import FriendsGamesContext from '../services/friends-games-context';
+import {withSteamID} from '../services/SteamID';
 
 const INITIAL_STATE = {
 	selectedFriends: [],
@@ -76,7 +75,7 @@ class FriendsGamesList extends React.Component {
 		} else {
 			return(
 				<div className = "container">
-					hey, why isn't there a steamid for me to check??
+					{/*hey, why isn't there a steamid for me to check??*/}
 					<button onClick = {this.handleFriends}>UpdateMe!</button>
 				</div>
 			)

@@ -1,7 +1,7 @@
 import React, { useContext} from 'react';
 import GameButton from './gameButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
-import FriendsGamesContext from '../helpers/friends-games-context';
+import FriendsGamesContext from '../services/friends-games-context';
 
 //generate the array of GameButton objects
 function generateGameButtons(gamesList){

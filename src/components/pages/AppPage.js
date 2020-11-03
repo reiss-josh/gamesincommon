@@ -1,5 +1,5 @@
 import React from 'react';
-import FriendsGamesList from '../components/FriendsGamesList';
+import FriendsGamesList from '../helpers/FriendsGamesList';
 
 const AppPage = () => {
 	return (<FriendsGamesList/>);

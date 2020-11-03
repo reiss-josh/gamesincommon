@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {withSteamID} from '../helpers/SteamID';
+import {withSteamID} from '../services/SteamID';
 
 const INITIAL_STATE = {
   isClicked: false,

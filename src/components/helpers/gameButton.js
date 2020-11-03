@@ -10,7 +10,7 @@ const GameButton = (game) =>{
 					<img
 						alt = {game.name}
 						src = {
-							"https://steamcdn-a.akamaihd.net/steam/apps/" + game.appid + "/" + "header.jpg"
+							"https://steamcdn-a.akamaihd.net/steam/apps/" + game.appid + "/header.jpg"
 							//"http://cdn.akamai.steamstatic.com/steam/apps/" +
 							//game.appid + "/" + "header_292x136.jpg"
 							//"http://media.steampowered.com/steamcommunity/public/images/apps/" +

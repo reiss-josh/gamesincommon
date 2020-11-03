@@ -1,5 +1,5 @@
 import React from 'react';
-import LandingPageHelper from '../components/LandingPageHelper';
+import LandingPageHelper from '../helpers/LandingPageHelper';
 
 const LandingPage = () => {
   return(<LandingPageHelper/>);

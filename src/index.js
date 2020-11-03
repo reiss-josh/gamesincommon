@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import SteamID, { SteamIDContext } from './helpers/SteamID';
-import App from './helpers/App';
+import SteamID, { SteamIDContext } from './components/services/SteamID';
+import App from './components/helpers/App';
 
 
 ReactDOM.render(

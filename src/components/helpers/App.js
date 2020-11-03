@@ -1,7 +1,7 @@
 import React from 'react';
 import AppPage from '../pages/AppPage.js'
 import LandingPage from '../pages/LandingPage.js'
-import {withSteamID} from './SteamID';
+import {withSteamID} from '../services/SteamID';
 
 const App = (props) => (
   <div>
