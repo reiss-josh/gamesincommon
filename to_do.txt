@@ -4,6 +4,7 @@ CURRENT STUFF:
 * add a login page -- leads to main page, passes logged in info. store in a context.
   -> handleFriendsList ought to use this object.
 * fix https: error on game banners
+  -> for some reason the img tags keep getting looked up as https instead of http
 
 BIG STUFF:
 * hand off network requests somehow -- don't expose api key.
