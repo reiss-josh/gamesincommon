@@ -16,7 +16,7 @@ const GameButton = (game) =>{
 							//"http://media.steampowered.com/steamcommunity/public/images/apps/" +
 							//game.appid + "/" + game.img_logo_url + ".jpg"
 						}
-						onError={(e)=>{e.target.onerror = null; e.target.src="https://steamcdn-a.akamaihd.net/steam/apps/400/header.jpg"}}
+						onError={(e)=>{e.target.onerror = null; e.target.src="https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/defaultheader.png"}}
 					></img>
 				</button>
 			</li>
