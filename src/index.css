@@ -104,3 +104,9 @@ ul li {
   background-color: #262931;
   border: none;
 }
+
+.game-button img {
+  width:180px;
+  height:1;
+  border: black;
+}

@@ -9,9 +9,15 @@ const GameButton = (game) =>{
 				}}>
 					<img
 						alt = {game.name}
-						src = {"http://media.steampowered.com/steamcommunity/public/images/apps/" +
-									game.appid + "/" + game.img_logo_url + ".jpg"}>
-					</img>
+						src = {
+							"https://steamcdn-a.akamaihd.net/steam/apps/" + game.appid + "/" + "header.jpg"
+							//"http://cdn.akamai.steamstatic.com/steam/apps/" +
+							//game.appid + "/" + "header_292x136.jpg"
+							//"http://media.steampowered.com/steamcommunity/public/images/apps/" +
+							//game.appid + "/" + game.img_logo_url + ".jpg"
+						}
+						onError={(e)=>{e.target.onerror = null; e.target.src="https://steamcdn-a.akamaihd.net/steam/apps/400/header.jpg"}}
+					></img>
 				</button>
 			</li>
 		)

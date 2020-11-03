@@ -8,6 +8,7 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
 
   //determine what data has/hasn't been memoized; retrieve it
   let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
+  console.log(missFound);
 
   //look up the missing data
   let allLibraries = [];
