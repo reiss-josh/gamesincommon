@@ -1,15 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {withSteamID} from '../helpers/SteamID';
 
-class LandingPageHelper extends React.Component{
-  constructor(props){
-    super();
-  }
-  render(){
-    this.props.steamid.steamid = "76561198119551697";
-    return(<div>{this.props.steamid.steamid}</div>);
-  }
+function updateSteamID(input, steamUserObject){
+  steamUserObject.steamid = input;
+}
+
+function LandingPageHelper (props){
+  const [input, setInput] = useState('');
+  return(
+    <div>
+    <label>
+      SteamID:
+      <input value={input} onInput={e => setInput(e.target.value)}/>
+    </label>
+    <button onMouseDown = {() => {updateSteamID(input, props.steamid)}}>hey</button>
+    </div>
+  );
 }
 
 export default withSteamID(LandingPageHelper);

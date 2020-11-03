@@ -17,11 +17,22 @@ class FriendsGamesList extends React.Component {
 		super();
 		this.state = {...INITIAL_STATE};
 		this.handleGames = this.handleGames.bind(this);
+		this.handleFriends = this.handleFriends.bind(this);
   }
   
   updateValue = (key,val) => {
 		this.setState({[key]: val});
 		if(key === 'selectedFriends') this.handleGames();
+	}
+
+	async handleFriends(){
+		if(this.props.steamid.steamid === '')
+			return;
+		let friendHandled = await handleFriendsList(this.props.steamid.steamid, this.props.steamid.apiKey, this.props.steamid.proxyUrl);
+    this.setState({friendsList : friendHandled.newFriendsList});
+		this.setState({selectedFriends: friendHandled.loggedInUserObject});
+
+		this.handleGames();
 	}
 
 	async handleGames(){
@@ -30,11 +41,7 @@ class FriendsGamesList extends React.Component {
 	}
 	
 	async componentDidMount() {
-		let friendHandled = await handleFriendsList(this.props.steamid.steamid, this.props.steamid.apiKey, this.props.steamid.proxyUrl);
-    this.setState({friendsList : friendHandled.newFriendsList});
-		this.setState({selectedFriends: friendHandled.loggedInUserObject});
-		
-		this.handleGames();
+		this.handleFriends();
 	}
 
 	render() {
@@ -70,6 +77,7 @@ class FriendsGamesList extends React.Component {
 			return(
 				<div className = "container">
 					hey, why isn't there a steamid for me to check??
+					<button onClick = {this.handleFriends}>UpdateMe!</button>
 				</div>
 			)
 		}
