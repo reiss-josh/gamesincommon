@@ -65,3 +65,7 @@ export function joinMissingParams(arrNeedsFilling, arrCanFill, propFill, propIde
 	};
 	return arrNeedsFilling;
 }
+
+export function isNumeric(value) {
+  return /^-?\d+$/.test(value);
+}

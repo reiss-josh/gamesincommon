@@ -1,7 +1,6 @@
 import React from 'react';
 import SelectorButtonHolder from './selectorButtonHolder';
 import GameButtonHolder from './gameButtonHolder';
-import {handleGamesList, handleFriendsList} from './steamAPI_handlers.js';
 import FriendsGamesContext from '../services/friends-games-context';
 import {withSteamID} from '../services/SteamID';
 
@@ -25,9 +24,9 @@ class FriendsGamesList extends React.Component {
 	}
 
 	async handleFriends(){
-		if(this.props.steamid.steamid === '')
+		if(this.props.steamid.getSteamID() === '')
 			return;
-		let friendHandled = await handleFriendsList(this.props.steamid.steamid, this.props.steamid.apiKey, this.props.steamid.proxyUrl);
+		let friendHandled = await this.props.steamid.handleFriends();
     this.setState({friendsList : friendHandled.newFriendsList});
 		this.setState({selectedFriends: friendHandled.loggedInUserObject});
 
@@ -35,7 +34,9 @@ class FriendsGamesList extends React.Component {
 	}
 
 	async handleGames(){
-		let gamesListResult = await handleGamesList(this.state.friendsList, this.state.selectedFriends, this.props.steamid.apiKey, this.props.steamid.proxyUrl);
+		let gamesListResult = await this.props.steamid.handleGames(
+			this.state.friendsList, this.state.selectedFriends
+		);
     this.setState({gamesList: gamesListResult}); //update stored games
 	}
 	
@@ -55,7 +56,7 @@ class FriendsGamesList extends React.Component {
         <GameButtonHolder/>
       </FriendsGamesContext.Provider>
 		
-		if(this.props.steamid.steamid){
+		if(this.props.steamid.getSteamID()){
 			return(
 				<div className = "container">
 					<div className = "main-row">

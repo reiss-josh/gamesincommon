@@ -1,6 +1,7 @@
 import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
-        getSteamGamesMultiple, getGamesInCommon} from './steamAPI_utils.js';
+        getSteamGamesMultiple, getGamesInCommon,
+        getIDfromVanity} from './steamAPI_utils.js';
 
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
@@ -50,4 +51,9 @@ export async function handleFriendsList (STEAM_ID_USER, API_KEY_USER, PROXY_URL)
     newFriendsList,
     loggedInUserObject
   };
+}
+
+export async function handleVanityUrl(vanityUrl, API_KEY_USER, PROXY_URL){
+  console.log("handling vanity url...");
+  return await getIDfromVanity(vanityUrl, API_KEY_USER, PROXY_URL);
 }

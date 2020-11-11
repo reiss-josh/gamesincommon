@@ -15,7 +15,7 @@ class SelectorButton extends Component {
 
   //if this button is the logged-in user's button, default it to Clicked.
   componentDidMount(){
-    if(this.props.person.steamid === this.props.steamid.steamid) this.setState({isClicked: true});
+    if(this.props.person.steamid === this.props.steamid.getSteamID()) this.setState({isClicked: true});
   }
 
   //when we click the button, update its state and pass that update upwards to its parent.

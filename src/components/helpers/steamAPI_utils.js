@@ -1,5 +1,5 @@
 import {getRequest} from '../utilities/http_utils.js';
-import {innerJoinObjectsMany} from '../utilities/generic_utils.js';
+import {innerJoinObjectsMany, isNumeric} from '../utilities/generic_utils.js';
 
 //returns an array of friend objects given a steamid
 export const getSteamFriends = async (userID, apiKey, proxy = "") => {
@@ -26,7 +26,8 @@ export const getPlayerSummaries = async(userIDs, apiKey, proxy = "") => {
 export const getSteamGames = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
 	let response = await getRequest(proxy + baseUrl + "?key=" + apiKey + "&steamid=" + userID
-																	+ "&include_appinfo=true&include_player_free_games=true");
+																	+ "&include_appinfo=true");
+																	//&include_player_free_games=true");
 	return response.response.games;
 }
 
@@ -46,4 +47,15 @@ export const getSteamGamesMultiple = async(playerObjs, apiKey, proxy) => {
 export function getGamesInCommon(userObjects) {
 	let libraries = userObjects.map(u => u.gameLibrary);
 	return innerJoinObjectsMany(libraries, 'appid');
+}
+
+export const getIDfromVanity = async(userVanityUrlName, apiKey, proxy = "") => {
+	const baseURL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/";
+	let response = await getRequest(proxy + baseURL + "?key=" + apiKey + "&vanityurl=" + userVanityUrlName)
+	//if user does not have a vanity id
+	if(response.response.success === 42 && isNumeric(userVanityUrlName)){
+		response.response.steamid = userVanityUrlName;
+		response.response.success = 1;
+	};
+	return response.response;
 }
