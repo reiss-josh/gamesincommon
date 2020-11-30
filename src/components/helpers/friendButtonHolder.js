@@ -1,5 +1,5 @@
 import React, { useContext} from 'react';
-import SelectorButton from './selectorButton.js';
+import FriendButton from './friendButton.js';
 import {alphabetizeObjects} from '../utilities/generic_utils.js';
 import FriendsGamesContext from '../services/friends-games-context';
 
@@ -10,14 +10,14 @@ function generateButtons(friendsList, context){
       alphabetizeObjects(friendsList, 'personaname')
       .map((person, index) => (
         <li key = {person['steamid']}>
-          <SelectorButton person = {person} context = {context} handler = {handleButtonClick}/>
+          <FriendButton person = {person} context = {context} handler = {handleButtonClick}/>
         </li>
       ))
     }</ul>
   )
 }
 
-//when a SelectorButton is clicked, it calls this function.
+//when a FriendButton is clicked, it calls this function.
 //it takes a person  object and a boolean.
 //depending on the state of the boolean variable, the person object is either selected or deselected.
 function handleButtonClick(person, context, isBeingAdded) {
@@ -33,9 +33,9 @@ function handleButtonClick(person, context, isBeingAdded) {
   context.updateValue('selectedFriends', newSelected);
 }
 
-const SelectorButtonHolder = () => {
+const FriendButtonHolder = () => {
   let user = useContext(FriendsGamesContext);
   return generateButtons(user.state.friendsList, user);
 }
 
-export default SelectorButtonHolder;
+export default FriendButtonHolder;

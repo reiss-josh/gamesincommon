@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   isClicked: false,
 };
 
-class SelectorButton extends Component {
+class FriendButton extends Component {
   constructor(props) {
     super();
     this.state = {...INITIAL_STATE};
@@ -36,6 +36,11 @@ class SelectorButton extends Component {
     return {borderColor: currBorder};
   }
 
+  getTextColor(ref){
+    if(ref.props.person.profilestate === 1) return({});
+    else return ({color: '#d3a16f'});
+  }
+
   handleHover(e) {
     //if(e.target.type === 'submit')
     //  e.target.style.background = '#434855'
@@ -54,10 +59,10 @@ class SelectorButton extends Component {
         onMouseDown={this.onButtonClick}
         style = {this.getBorderColor(this)}>
         <img src={person.avatar} alt = {person.personaname}></img>
-        <span>{person.personaname}</span>
+        <span style = {this.getTextColor(this)}>{person.personaname}</span>
       </button>
     )
   }
 }
 
-export default withSteamID(SelectorButton);
+export default withSteamID(FriendButton);

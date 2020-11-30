@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectorButtonHolder from './selectorButtonHolder';
+import FriendButtonHolder from './friendButtonHolder';
 import GameButtonHolder from './gameButtonHolder';
 import FriendsGamesContext from '../services/friends-games-context';
 import {withSteamID} from '../services/SteamID';
@@ -34,6 +34,7 @@ class FriendsGamesList extends React.Component {
 	}
 
 	async handleGames(){
+		this.setState({gamesList: []});
 		let gamesListResult = await this.props.steamid.handleGames(
 			this.state.friendsList, this.state.selectedFriends
 		);
@@ -46,16 +47,19 @@ class FriendsGamesList extends React.Component {
 
 	render() {
 		//friend list JSX
-		let friendButtons =
+		let friendButtons = (this.state.friendsList.length > 0) ?
       <FriendsGamesContext.Provider value = {{state: this.state, updateValue: this.updateValue}}>
-        <SelectorButtonHolder/>
-      </FriendsGamesContext.Provider>
+        <FriendButtonHolder/>
+			</FriendsGamesContext.Provider> :
+		<div>{"LOADING\nFRIENDS"}</div>; //TODO: make this nice
+
 		//games list JSX
-		let gamesButtons =
+		let gamesButtons = (this.state.gamesList.length > 0) ?
       <FriendsGamesContext.Provider value = {{state: this.state}}>
         <GameButtonHolder/>
-      </FriendsGamesContext.Provider>
-		
+			</FriendsGamesContext.Provider> :
+		<div>{"LOADING\nGAMES"}</div>; //TODO: make this nice
+
 		if(this.props.steamid.getSteamID()){
 			return(
 				<div className = "container">
@@ -76,8 +80,7 @@ class FriendsGamesList extends React.Component {
 		} else {
 			return(
 				<div className = "container">
-					{/*hey, why isn't there a steamid for me to check??*/}
-					<button onClick = {this.handleFriends}>UpdateMe!</button>
+					{"hey, why isn't there a steamid for me to check??"}
 				</div>
 			)
 		}
