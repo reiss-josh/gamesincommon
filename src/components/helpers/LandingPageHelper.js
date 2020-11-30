@@ -27,10 +27,10 @@ class LandingPageHelper extends React.Component {
   render(){
     return(
       <div>
-        {this.state.myid}
+        <span style = {{color:"#d36f6f"}}>{this.state.myid}</span>
         <div>
-          <input value={this.state.text} placeholder = "Enter your Vanity ID" onChange={e => this.onInput(e.target.value)}/>
-          <button onClick = {e => this.onClick(e)}>Submit me!</button>
+          <input value={this.state.text} placeholder = "Vanity URL or Steam ID" onChange={e => this.onInput(e.target.value)}/>
+          <button onClick = {e => this.onClick(e)}>SUBMIT</button>
         </div>
         <img
           alt="example of a steam vanity url"
