@@ -54,7 +54,7 @@ class FriendsGamesList extends React.Component {
 		<div>
 			<img
 				alt="friendsbuttons loading icon"
-				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading1.gif"}
+				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
 			/>
 		</div>; //TODO: make this nice
 
@@ -66,7 +66,7 @@ class FriendsGamesList extends React.Component {
 		<div>
 			<img
 				alt="gamesbuttons loading icon"
-				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading1.gif"}
+				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
 			/>
 		</div>; //TODO: make this nice
 

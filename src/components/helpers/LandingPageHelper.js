@@ -28,14 +28,14 @@ class LandingPageHelper extends React.Component {
         <div class = "errorCode">
           <span style = {{color:"#d36f6f"}}>{this.state.myid}</span>
         </div>
-        <div class = "idInputBox">
-          <input type = "text" value={this.state.text} placeholder = "Vanity URL or Steam ID" onChange={e => this.onInput(e.target.value)}/>
-        </div>
-        <div class = "idInputButton">
-          <form onSubmit={this.onFormSubmit}>
+        <form onSubmit={this.onFormSubmit}>
+          <div class = "idInputBox">
+            <input type = "text" value={this.state.text} placeholder = "Vanity URL or Steam ID" onChange={e => this.onInput(e.target.value)}/>
+          </div>
+          <div class = "idInputButton">
             <button type="submit">SUBMIT</button>
-          </form>
-        </div>
+          </div>
+        </form>
         <div class = "tutImages">
           <div class = "vanityImg">
             <img
