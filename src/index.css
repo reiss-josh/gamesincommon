@@ -8,6 +8,81 @@ body {
   color: #6fb3d3;
 }
 
+input[type=text] {
+  color: #6fb3d3;
+  background-color: #17181b;
+  width: 50%;
+  padding: 15px 10px;
+  margin: 8px 0px;
+  border:none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+input[type=text]::placeholder {
+  color: #476979;
+}
+
+input[type=text]:focus {
+  border:none;
+}
+
+.landing-page {
+  margin: 10% 0px;
+}
+
+.errorCode {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.errorCode span {
+  /*background-color: #3b3939;*/
+  padding: 5px 15px;
+  height: 15px;
+}
+
+.vanityImg{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.steamidImg{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.tutImages{
+  margin: 5% 0px;
+}
+
+.idInputBox {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.idInputButton{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.idInputButton button {
+  background-color: #75a72d; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
 .main-row {
   padding: 10px 0;
   display:flex;
