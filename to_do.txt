@@ -1,29 +1,13 @@
-final app:
-
 CURRENT STUFF:
-* add a login page -- leads to main page, passes logged in info. store in a context.
-  -> handleFriendsList ought to use this object.
-* fix weird line-skipping on game display list
-* offer a loading circle while games list is being updated
+* clean up the loading graphic
   -> after some time out period, show the currently present error message
 
-BIG STUFF:
+* overhaul the app page CSS
+
+* fix weird line-skipping on game display list
+
 * make it so that wider windows have double-wide list of friends
-* add hover coloring
-* implement firebase:
-  -> whenever about to make an API call, try checking the database first.
-  -> if it's not in the database, add it in after retrieving it.
-  (gonna store a JSON of every steam game i guess...)
 
-LESS IMPORTANT:
+* add hover coloring or shadow or something
 
-* format the buttons/lists to look nice
-  -> maybe add a hover-over response of some sort
 * make scrollbars look nicer
-
-UNKNOWN SIZE STUFF:
-add particular sorts:
-  logged user hours
-  all selected user hours
-  alphabetized
-  random
