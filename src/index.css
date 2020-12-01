@@ -1,6 +1,8 @@
 * {    
   margin: 0;
   padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  
 }
 
 body {
@@ -8,25 +10,8 @@ body {
   color: #6fb3d3;
 }
 
-input[type=text] {
-  color: #6fb3d3;
-  background-color: #17181b;
-  width: 50%;
-  padding: 15px 10px;
-  margin: 8px 0px;
-  border:none;
-  border-radius: 5px;
-  text-align: center;
-}
 
-input[type=text]::placeholder {
-  color: #476979;
-}
-
-input[type=text]:focus {
-  border:none;
-}
-
+/*landing page*/
 .landing-page {
   margin: 10% 0px;
 }
@@ -43,20 +28,26 @@ input[type=text]:focus {
   height: 15px;
 }
 
-.vanityImg{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.landing-page input[type=text] {
+  color: #6fb3d3;
+  background-color: #17181b;
+  width: 50%;
+  padding: 15px 10px;
+  margin: 8px 0px;
+  border:none;
+  border-radius: 5px;
+  text-align: center;
 }
 
-.steamidImg{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.landing-page input[type=text]::placeholder {
+  color: #476979;
 }
 
-.tutImages{
-  margin: 5% 0px;
+.landing-page input[type=text]:focus {
+  border-color: #53565e;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 .idInputBox {
@@ -83,11 +74,40 @@ input[type=text]:focus {
   border-radius: 5px;
 }
 
+.idInputButton button:focus {
+  border-color: #53565e;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.tutImages{
+  margin: 5% 0px;
+}
+
+.vanityImg{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.steamidImg{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/*app page*/
 .main-row {
   padding: 10px 0;
   display:flex;
 }
 
+ul li {
+  list-style-type: none;
+}
+
+/*friends list*/
 .friend-column {
   margin: 0px 0px;
   padding: 0px 0px;
@@ -99,48 +119,20 @@ input[type=text]:focus {
   width: 0vw;
 }
 
-.games-column {
-  overflow:auto;
-  height: 96.5vh;
-}
-
-.games-scroll {
-  margin: 0px 0px 0px 0px;
+.friend-column ul li {
+  margin: 0px 0 4px 0;
 }
 
 .friend-scroll {
   margin: 0px 10px 0px 0px;
 }
 
-.friend-column ul li {
-  margin: 0px 0 4px 0;
-}
-
-.selected-friends ul li {
-  margin: 0 6px 3px 0;
-  float: left;
-}
-
-ul li {
-  list-style-type: none;
-}
-
-.games-and-selected{
-  margin: 0px 0px 0px 1vw;
-  float: none;
-  display: flex;
-  flex-direction: column;
-}
-
-.games-column li{
-  float: left;
-}
-
-.selected-friends{
-  margin: 00px 0px 00px 2.5px;
-}
-
 .friend-button {
+  
+}
+
+.friend-button button
+{
   display: inline-block;
   width: 13vw;
   min-width: 130px;
@@ -153,6 +145,7 @@ ul li {
   color: #6fb3d3;
   padding: 0px 0px 0px 0px;
   text-align: center;
+  border-radius: 5px;
 }
 
 .friend-button img 
@@ -166,8 +159,22 @@ ul li {
 .friend-button span
 {
 	display:inline-block;
-  width: 120px;
+  width: 110px;
   vertical-align:middle;
+}
+
+/*games list*/
+.games-column {
+  overflow:auto;
+  height: 96.5vh;
+}
+
+.games-column li{
+  float: left;
+}
+
+.games-scroll {
+  margin: 0px 0px 0px 0px;
 }
 
 .game-button {
@@ -184,4 +191,5 @@ ul li {
   width:180px;
   height:1;
   border: black;
+  border-radius: 10px;
 }

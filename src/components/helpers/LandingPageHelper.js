@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {withSteamID} from '../services/SteamID';
-import {isNumeric} from '../utilities/generic_utils'
 
 
 

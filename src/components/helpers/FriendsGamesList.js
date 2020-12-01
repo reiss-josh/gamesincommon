@@ -51,14 +51,24 @@ class FriendsGamesList extends React.Component {
       <FriendsGamesContext.Provider value = {{state: this.state, updateValue: this.updateValue}}>
         <FriendButtonHolder/>
 			</FriendsGamesContext.Provider> :
-		<div>{"LOADING\nFRIENDS"}</div>; //TODO: make this nice
+		<div>
+			<img
+				alt="friendsbuttons loading icon"
+				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading1.gif"}
+			/>
+		</div>; //TODO: make this nice
 
 		//games list JSX
 		let gamesButtons = (this.state.gamesList.length > 0) ?
       <FriendsGamesContext.Provider value = {{state: this.state}}>
         <GameButtonHolder/>
 			</FriendsGamesContext.Provider> :
-		<div>{"LOADING\nGAMES"}</div>; //TODO: make this nice
+		<div>
+			<img
+				alt="gamesbuttons loading icon"
+				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading1.gif"}
+			/>
+		</div>; //TODO: make this nice
 
 		if(this.props.steamid.getSteamID()){
 			return(

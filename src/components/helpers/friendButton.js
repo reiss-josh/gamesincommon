@@ -55,12 +55,14 @@ class FriendButton extends Component {
     let person = this.props.person;
 
     return (
-      <button className = {'friend-button'}
+      <div className = {'friend-button'}>
+      <button
         onMouseDown={this.onButtonClick}
         style = {this.getBorderColor(this)}>
         <img src={person.avatar} alt = {person.personaname}></img>
         <span style = {this.getTextColor(this)}>{person.personaname}</span>
       </button>
+      </div>
     )
   }
 }
