@@ -27,7 +27,10 @@ export const getSteamGames = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
 	let response = await getRequest(proxy + baseUrl + "?key=" + apiKey + "&steamid=" + userID
 																	+ "&include_appinfo=true&include_player_free_games=true");
-	return response.response.games;
+	if(response.response.games){
+		return response.response.games;
+	}
+	return [];
 }
 
 //returns an array of game libraries given an arrayof player objects

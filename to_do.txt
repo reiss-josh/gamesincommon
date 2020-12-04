@@ -11,3 +11,7 @@ CURRENT STUFF:
 * add hover coloring or shadow or something
 
 * make scrollbars look nicer
+
+ACTUAL BUGS:
+* selecting users who have private libraries or private accounts breaks everything
+* entering an invalid, numeric vanityurl results in crash

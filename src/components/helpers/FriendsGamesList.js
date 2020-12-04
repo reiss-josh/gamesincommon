@@ -49,26 +49,36 @@ class FriendsGamesList extends React.Component {
 		//friend list JSX
 		let friendButtons = (this.state.friendsList.length > 0) ?
       <FriendsGamesContext.Provider value = {{state: this.state, updateValue: this.updateValue}}>
-        <FriendButtonHolder/>
+      	<FriendButtonHolder/>
 			</FriendsGamesContext.Provider> :
-		<div>
-			<img
-				alt="friendsbuttons loading icon"
-				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
-			/>
-		</div>; //TODO: make this nice
+			<div>
+				<img
+					alt="friendsbuttons loading icon"
+					src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
+				/>
+			</div>; //TODO: make this nice
 
 		//games list JSX
-		let gamesButtons = (this.state.gamesList.length > 0) ?
-      <FriendsGamesContext.Provider value = {{state: this.state}}>
-        <GameButtonHolder/>
-			</FriendsGamesContext.Provider> :
-		<div>
-			<img
-				alt="gamesbuttons loading icon"
-				src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
-			/>
-		</div>; //TODO: make this nice
+		let gamesButtons = (this.state.gamesList) ?
+			//block for ig gl exists
+			(this.state.gamesList.length > 0) ?
+      	<FriendsGamesContext.Provider value = {{state: this.state}}>
+        	<GameButtonHolder/>
+				</FriendsGamesContext.Provider> :
+				<div>
+					<img
+						alt="gamesbuttons loading icon"
+						src={"https://raw.githubusercontent.com/reiss-josh/gamesincommon/master/src/img/loading3.gif"}
+					/>
+				</div> :
+				//NEED TO ADD TIMER TO IMAGE BLOCK THAT TIMES OUT TO "GAMES NOT FOUND"
+				//{"It is possible you selected a private profile - they look like this ()"}
+				//{"Or, maybe the users you've selected really don't have any games in common! Too bad."}
+			//block for if gl dne
+			<div>
+				{"No games were found."}
+				{"It seems you've deselected all users - a selected user looks like this ()"}
+			</div>; //TODO: make this nice
 
 		if(this.props.steamid.getSteamID()){
 			return(
