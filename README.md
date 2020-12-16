@@ -1,4 +1,4 @@
-This is a test React app used for checking what games you have in common with your friends on Steam.
+# This is a test React app used for checking what games you have in common with your friends on Steam.
 
 The experience isn't totally seamless yet, since you're not yet able to log into your steam account.
 
