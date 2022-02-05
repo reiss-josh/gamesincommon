@@ -50,7 +50,6 @@ export const getSteamGameCategories = async(appID, apiKey, proxy = "") => {
 	const baseUrl = "https://store.steampowered.com/api/appdetails?filters=categories&appids=";
 	let response = await getRequest(proxy + baseUrl + appID);
 	if (response[appID].success){
-		console.log(response[appID].data.categories);
 		return response[appID].data.categories;
 	}
 }

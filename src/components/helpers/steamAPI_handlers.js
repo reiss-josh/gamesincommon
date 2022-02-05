@@ -4,6 +4,26 @@ import {getSteamFriends, getPlayerSummaries,
         getIDfromVanity,
         getSteamGameCategories} from './steamAPI_utils.js';
 
+function determineCategoryFlags(newCategories){
+  let isMultiplayer = false;
+  let isOnlineMultiplayer = false;
+  let isLocalMultiplayer = false;
+  let isSupportGamepad = false;
+  for (let i = 0; i < newCategories.length; i++){
+    if(newCategories[i].id === 1 || newCategories[i].id === 9 || newCategories[i].id === 49) isMultiplayer = true;
+    if(newCategories[i].id === 36 || newCategories[i].id === 38) {isMultiplayer = true; isOnlineMultiplayer = true;}
+    if(newCategories[i].id === 24 || newCategories[i].id === 37 || newCategories[i].id === 47) {isMultiplayer = true; isLocalMultiplayer = true;}
+    if(newCategories[i].id === 18 || newCategories[i].id === 28) {isSupportGamepad = true;}
+    if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
+  }
+  return JSON.parse(
+    '[{ "isMultiplayer": "'+ isMultiplayer + '" },' +
+    '{ "isOnlineMultiplayer": "'+ isOnlineMultiplayer + '" },' +
+    '{ "isLocalMultiplayer": "'+ isLocalMultiplayer + '" },' +
+    '{ "isSupportgamepad": "'+ isSupportGamepad + '" } ]'
+  );
+}
+
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
   console.log("handling games list...");
@@ -18,6 +38,16 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
     let newGames = missingLibraries[0].gameLibrary;
     for(let i = 0; i < newGames.length; i++){
       let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
+      if(newCategories){
+        newGames[i].flags = determineCategoryFlags(newCategories);
+      }
+      else{
+        newCategories = JSON.parse("[{}]");
+        newGames[i].flags = JSON.parse('[{ "isMultiplayer": "'+ false +'" },' +
+        '{ "isOnlineMultiplayer": "'+ false +'" },' +
+        '{ "isLocalMultiplayer": "'+ false +'" },' +
+        '{ "isSupportgamepad": "'+ false +'" } ]');
+      }
       newGames[i].categories = newCategories;
     }
     allLibraries = allLibraries.concat(missingLibraries);
