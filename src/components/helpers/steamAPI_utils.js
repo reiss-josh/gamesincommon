@@ -45,6 +45,16 @@ export const getSteamGamesMultiple = async(playerObjs, apiKey, proxy) => {
 	return allLibraries;
 }
 
+//gets categories list for a given game
+export const getSteamGameCategories = async(appID, apiKey, proxy = "") => {
+	const baseUrl = "https://store.steampowered.com/api/appdetails?filters=categories&appids=";
+	let response = await getRequest(proxy + baseUrl + appID);
+	if (response[appID].success){
+		console.log(response[appID].data.categories);
+		return response[appID].data.categories;
+	}
+}
+
 //returns the inner join of multiple game libraries, given an array of player objects
 export function getGamesInCommon(userObjects) {
 	let libraries = userObjects.map(u => u.gameLibrary);

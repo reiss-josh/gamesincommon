@@ -1,7 +1,8 @@
 import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
         getSteamGamesMultiple, getGamesInCommon,
-        getIDfromVanity} from './steamAPI_utils.js';
+        getIDfromVanity,
+        getSteamGameCategories} from './steamAPI_utils.js';
 
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
@@ -14,6 +15,11 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
   let allLibraries = [];
   if(missFound.missing.length > 0){ //if there's anything missing...
     let missingLibraries = await getSteamGamesMultiple(missFound.missing, API_KEY_USER, PROXY_URL);
+    let newGames = missingLibraries[0].gameLibrary;
+    for(let i = 0; i < newGames.length; i++){
+      let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
+      newGames[i].categories = newCategories;
+    }
     allLibraries = allLibraries.concat(missingLibraries);
   };
   
