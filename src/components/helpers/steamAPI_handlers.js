@@ -17,10 +17,10 @@ function determineCategoryFlags(newCategories){
     if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
   }
   return JSON.parse(
-    '[{ "isMultiplayer": "'+ isMultiplayer + '" },' +
-    '{ "isOnlineMultiplayer": "'+ isOnlineMultiplayer + '" },' +
-    '{ "isLocalMultiplayer": "'+ isLocalMultiplayer + '" },' +
-    '{ "isSupportgamepad": "'+ isSupportGamepad + '" } ]'
+    '{ "isMultiplayer": '+ isMultiplayer + ',' +
+    '"isOnlineMultiplayer": '+ isOnlineMultiplayer + ',' +
+    '"isLocalMultiplayer": '+ isLocalMultiplayer + ',' +
+    '"isSupportgamepad": '+ isSupportGamepad + ' }'
   );
 }
 
@@ -43,10 +43,10 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
       }
       else{
         newCategories = JSON.parse("[{}]");
-        newGames[i].flags = JSON.parse('[{ "isMultiplayer": "'+ false +'" },' +
-        '{ "isOnlineMultiplayer": "'+ false +'" },' +
-        '{ "isLocalMultiplayer": "'+ false +'" },' +
-        '{ "isSupportgamepad": "'+ false +'" } ]');
+        newGames[i].flags = JSON.parse('{"isMultiplayer": '+ false +',' +
+        '"isOnlineMultiplayer": '+ false +',' +
+        '"isLocalMultiplayer": '+ false +',' +
+        '"isSupportgamepad": '+ false +'}');
       }
       newGames[i].categories = newCategories;
     }

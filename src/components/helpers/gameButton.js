@@ -1,7 +1,8 @@
 import React from 'react';
 
 const GameButton = (game) =>{
-  if(game.img_logo_url !== ""){
+  //if(game.img_logo_url !== ""){
+	if(game.img_logo_url !== "" && game.flags.isMultiplayer === true){
 		return (
 			<li key = {game.appid}>
 				<button className = 'game-button' onClick = {
