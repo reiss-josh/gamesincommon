@@ -38,3 +38,11 @@ Multiplayer:
 Controller:
 * Partial Controller: id:18
 * Full Controller Support: id: 28
+
+appid: int
+flags: boolean array
+has_community_visible_stats: true
+img_icon_url: string
+im_logo_url: string
+name: string
+playtime_forever: integer

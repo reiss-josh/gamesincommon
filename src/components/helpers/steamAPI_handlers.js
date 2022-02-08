@@ -1,28 +1,9 @@
 import {sepMissingParams, joinMissingParams} from '../utilities/generic_utils.js';
 import {getSteamFriends, getPlayerSummaries,
         getSteamGamesMultiple, getGamesInCommon,
-        getIDfromVanity,
-        getSteamGameCategories} from './steamAPI_utils.js';
-
-function determineCategoryFlags(newCategories){
-  let isMultiplayer = false;
-  let isOnlineMultiplayer = false;
-  let isLocalMultiplayer = false;
-  let isSupportGamepad = false;
-  for (let i = 0; i < newCategories.length; i++){
-    if(newCategories[i].id === 1 || newCategories[i].id === 9 || newCategories[i].id === 49) isMultiplayer = true;
-    if(newCategories[i].id === 36 || newCategories[i].id === 38) {isMultiplayer = true; isOnlineMultiplayer = true;}
-    if(newCategories[i].id === 24 || newCategories[i].id === 37 || newCategories[i].id === 47) {isMultiplayer = true; isLocalMultiplayer = true;}
-    if(newCategories[i].id === 18 || newCategories[i].id === 28) {isSupportGamepad = true;}
-    if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
-  }
-  return JSON.parse(
-    '{ "isMultiplayer": '+ isMultiplayer + ',' +
-    '"isOnlineMultiplayer": '+ isOnlineMultiplayer + ',' +
-    '"isLocalMultiplayer": '+ isLocalMultiplayer + ',' +
-    '"isSupportgamepad": '+ isSupportGamepad + ' }'
-  );
-}
+        getIDfromVanity, getSteamGameCategories,
+        determineCategoryFlags, assembleIDsArray} from './steamAPI_utils.js';
+import {getMultipleGamesFirebase, setMultipleGamesFirebase} from './firebase_utils';
 
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
@@ -34,22 +15,45 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
   //look up the missing data
   let allLibraries = [];
   if(missFound.missing.length > 0){ //if there's anything missing...
+    //get all libraries that we need to query still
     let missingLibraries = await getSteamGamesMultiple(missFound.missing, API_KEY_USER, PROXY_URL);
-    let newGames = missingLibraries[0].gameLibrary;
-    for(let i = 0; i < newGames.length; i++){
-      let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
-      if(newCategories){
-        newGames[i].flags = determineCategoryFlags(newCategories);
+    //then, check what games are in there. (THIS LINE MIGHT BE WRONG)
+    let newGames = missingLibraries[0].gameLibrary; //new games from library
+    //then, get the appids of these new games.
+    let newAppIDs = assembleIDsArray(newGames); //new app ids
+    //query the firebase data for those appids.
+    let [pulledFirebaseData, pulledFirebaseIDs] = await getMultipleGamesFirebase(newAppIDs); //new data pulled from firebase
+
+    let steamBlock = 0;
+    const CAP = 100;
+
+    const toBePushed = [];
+    //go through games list.
+    for(let i = 0; i < newGames.length && steamBlock < CAP; i++){
+      let flagData = [];
+      //if the game's appid was in the pulled firebase ids, just pull it
+      if(pulledFirebaseIDs.includes(newGames[i].appid)){
+        flagData = (pulledFirebaseData[pulledFirebaseIDs.indexOf(newGames[i].appid)].fieldsString);
+      } else {
+        //otherwise, try to get it from steam.
+        let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
+        steamBlock++;
+        if(newCategories){
+          flagData = determineCategoryFlags(newCategories);
+        } else {
+          flagData = JSON.parse('{"isMultiplayer": '+ false +',' +
+          '"isOnlineMultiplayer": '+ false +',' +
+          '"isLocalMultiplayer": '+ false +',' +
+          '"isSupportgamepad": '+ false +'}');
+        }
+        //then, get ready to push it to firebase.
+        toBePushed.push(newGames[i]);
       }
-      else{
-        newCategories = JSON.parse("[{}]");
-        newGames[i].flags = JSON.parse('{"isMultiplayer": '+ false +',' +
-        '"isOnlineMultiplayer": '+ false +',' +
-        '"isLocalMultiplayer": '+ false +',' +
-        '"isSupportgamepad": '+ false +'}');
-      }
-      newGames[i].categories = newCategories;
+      //finally, store the flags in the game's object.
+      newGames[i].flags = flagData;
     }
+    //now, upload whatever we need to firebase.
+    if(toBePushed && toBePushed.length > 0){await setMultipleGamesFirebase(toBePushed);}
     allLibraries = allLibraries.concat(missingLibraries);
   };
   

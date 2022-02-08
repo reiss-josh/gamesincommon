@@ -1,6 +1,34 @@
 import {getRequest} from '../utilities/http_utils.js';
 import {innerJoinObjectsMany, isNumeric} from '../utilities/generic_utils.js';
 
+//take array of games, extract their appIDs
+export function assembleIDsArray(newGamesArr){
+  let outArr = [];
+  newGamesArr.forEach(element => outArr.push(element.appid));
+  return outArr;
+}
+
+//take list of categories, return relevant boolean flags
+export function determineCategoryFlags(newCategories){
+  let isMultiplayer = false;
+  let isOnlineMultiplayer = false;
+  let isLocalMultiplayer = false;
+  let isSupportGamepad = false;
+  for (let i = 0; i < newCategories.length; i++){
+    if(newCategories[i].id === 1 || newCategories[i].id === 9 || newCategories[i].id === 49) isMultiplayer = true;
+    if(newCategories[i].id === 36 || newCategories[i].id === 38) {isMultiplayer = true; isOnlineMultiplayer = true;}
+    if(newCategories[i].id === 24 || newCategories[i].id === 37 || newCategories[i].id === 47) {isMultiplayer = true; isLocalMultiplayer = true;}
+    if(newCategories[i].id === 18 || newCategories[i].id === 28) {isSupportGamepad = true;}
+    if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
+  }
+  return JSON.parse(
+    '{ "isMultiplayer": '+ isMultiplayer + ',' +
+    '"isOnlineMultiplayer": '+ isOnlineMultiplayer + ',' +
+    '"isLocalMultiplayer": '+ isLocalMultiplayer + ',' +
+    '"isSupportgamepad": '+ isSupportGamepad + ' }'
+  );
+}
+
 //returns an array of friend objects given a steamid
 export const getSteamFriends = async (userID, apiKey, proxy = "") => {
 	const baseUrl = "https://api.steampowered.com/ISteamUser/GetFriendList/v1/";
@@ -48,6 +76,7 @@ export const getSteamGamesMultiple = async(playerObjs, apiKey, proxy) => {
 //gets categories list for a given game
 export const getSteamGameCategories = async(appID, apiKey, proxy = "") => {
 	const baseUrl = "https://store.steampowered.com/api/appdetails?filters=categories&appids=";
+	console.log("Getting game categories for " + appID + "...");
 	let response = await getRequest(proxy + baseUrl + appID);
 	if (response[appID].success){
 		return response[appID].data.categories;
