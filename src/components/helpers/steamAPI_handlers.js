@@ -17,46 +17,6 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
   if(missFound.missing.length > 0){ //if there's anything missing...
     //get all libraries that we need to query still
     let missingLibraries = await getSteamGamesMultiple(missFound.missing, API_KEY_USER, PROXY_URL);
-    //then, check what games are in there. (THIS LINE MIGHT BE WRONG)
-    let newGames = missingLibraries[0].gameLibrary; //new games from library
-    //then, get the appids of these new games.
-    let newAppIDs = assembleIDsArray(newGames); //new app ids
-    //query the firebase data for those appids.
-    let [pulledFirebaseData, pulledFirebaseIDs] = await getMultipleGamesFirebase(newAppIDs); //new data pulled from firebase
-
-    let steamBlock = 0;
-    const CAP = 100;
-
-    const toBePushed = [];
-    //go through games list.
-    for(let i = 0; i < newGames.length && steamBlock < CAP; i++){
-      let flagData = [];
-      //if the game's appid was in the pulled firebase ids, just pull it
-      if(pulledFirebaseIDs.includes(newGames[i].appid)){
-        flagData = (pulledFirebaseData[pulledFirebaseIDs.indexOf(newGames[i].appid)].fieldsString);
-      } else {
-        //otherwise, try to get it from steam.
-        let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
-        steamBlock++;
-        if(newCategories){
-          flagData = determineCategoryFlags(newCategories);
-        } else {
-          flagData = JSON.parse('{"isMultiplayer": '+ false +',' +
-          '"isOnlineMultiplayer": '+ false +',' +
-          '"isLocalMultiplayer": '+ false +',' +
-          '"isSupportgamepad": '+ false +'}');
-        }
-        //then, get ready to push it to firebase.
-        toBePushed.push(newGames[i]);
-      }
-      //finally, store the flags in the game's object.
-      newGames[i].flags = flagData;
-
-      if(i === newGames.length-1) {console.log("All games successfully pulled.")}
-      else if (steamBlock === CAP) {console.log("Aborting to avoid hitting steam API quota.")};
-    }
-    //now, upload whatever we need to firebase.
-    if(toBePushed && toBePushed.length > 0){await setMultipleGamesFirebase(toBePushed);}
     allLibraries = allLibraries.concat(missingLibraries);
   };
   
@@ -70,6 +30,54 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
 
   //get gamesInCommon, now that we have all our data
   let gamesInCommon = getGamesInCommon(allLibraries);
+  
+  //then, check what games are in there that need flags. (THIS LINE MIGHT BE WRONG)
+  const newGames = [];
+  if(gamesInCommon){
+    gamesInCommon.forEach(game => {
+      if(!game.flags){
+        newGames.push(game);
+      }  
+    });
+  }
+  //then, get the appids of these new games.
+  let newAppIDs = assembleIDsArray(newGames); //new app ids
+  //query the firebase data for those appids.
+  let [pulledFirebaseData, pulledFirebaseIDs] = await getMultipleGamesFirebase(newAppIDs); //new data pulled from firebase
+
+  let steamBlock = 0;
+  const CAP = 100;
+
+  const toBePushed = [];
+  //go through games list.
+  for(let i = 0; i < newGames.length && steamBlock < CAP; i++){
+    let flagData = [];
+    //if the game's appid was in the pulled firebase ids, just pull it
+    if(pulledFirebaseIDs.includes(newGames[i].appid)){
+      flagData = (pulledFirebaseData[pulledFirebaseIDs.indexOf(newGames[i].appid)].fieldsString);
+    } else {
+      //otherwise, try to get it from steam.
+      let newCategories = await getSteamGameCategories(newGames[i].appid, API_KEY_USER, PROXY_URL);
+      steamBlock++;
+      if(newCategories){
+        flagData = determineCategoryFlags(newCategories);
+      } else {
+        flagData = JSON.parse('{"isMultiplayer": '+ false +',' +
+        '"isOnlineMultiplayer": '+ false +',' +
+        '"isLocalMultiplayer": '+ false +',' +
+        '"isSupportgamepad": '+ false +'}');
+      }
+      //then, get ready to push it to firebase.
+      toBePushed.push(newGames[i]);
+    }
+    //finally, store the flags in the game's object.
+    newGames[i].flags = flagData;
+
+    if(i === newGames.length-1) {console.log("All games successfully pulled.")}
+    else if (steamBlock === CAP) {console.log(i + "/" + newGames.length + " games pulled. Aborting to avoid hitting steam API quota.")};
+  }
+  //now, upload whatever we need to firebase.
+  if(toBePushed && toBePushed.length > 0){await setMultipleGamesFirebase(toBePushed);}
   return gamesInCommon;
 }
 

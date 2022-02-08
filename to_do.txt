@@ -4,8 +4,6 @@ CURRENT STUFF:
 
 * overhaul the app page CSS
 
-* fix weird line-skipping on game display list
-
 * make it so that wider windows have double-wide list of friends
 
 * add hover coloring or shadow or something
@@ -15,3 +13,22 @@ CURRENT STUFF:
 ACTUAL BUGS:
 * selecting users who have private libraries or private accounts breaks everything
 * entering an invalid, numeric vanityurl results in crash
+
+
+Online:
+* Online PvP: 36
+* Online Co-op: 38
+
+Splitscreen:
+* Shared/Split Screen: 24
+* Lan Pvp: 47
+* Shared/Split Screen PvP: 37
+
+Multiplayer:
+* Multi-player: 1
+* PVP: 49
+* Co-op: 9
+
+Controller:
+* Partial Controller: id:18
+* Full Controller Support: id: 28

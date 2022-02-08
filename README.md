@@ -20,29 +20,3 @@ Here are some screenshots of the working application:
 | --- | --- |
 | <img src = "screencaps/desktopcap_medium.png" height = "250"> | <img src = "screencaps/mobile_landscape.jpg" height = "250"> |
 | <img src = "screencaps/desktopcap_tiny.png" height = "400"> | <img src = "screencaps/mobile_portrait.jpg" height = "400"> |
-
-Online:
-* Online PvP: 36
-* Online Co-op: 38
-
-Splitscreen:
-* Shared/Split Screen: 24
-* Lan Pvp: 47
-* Shared/Split Screen PvP: 37
-
-Multiplayer:
-* Multi-player: 1
-* PVP: 49
-* Co-op: 9
-
-Controller:
-* Partial Controller: id:18
-* Full Controller Support: id: 28
-
-appid: int
-flags: boolean array
-has_community_visible_stats: true
-img_icon_url: string
-im_logo_url: string
-name: string
-playtime_forever: integer
