@@ -63,9 +63,13 @@ export const getMultipleGamesFirebase = async (gamesList) => {
 export const setMultipleGamesFirebase = async (gamesList) => {
   const batch = writeBatch(db);
   const refArr = [];
-
   for(let i = 0; i < gamesList.length; i++){
-    let newRef = doc(db, "gamesData", gamesList[i].name);
+    let newRef = null;
+    try {
+      newRef = doc(db, "gamesData", gamesList[i].name);
+    } catch (error) {
+      newRef = doc(db, "gamesData", gamesList[i].appid.toString());
+    }
     refArr.push(newRef);
     batch.set(refArr[i], {"fieldsString": gamesList[i].flags, "appid": gamesList[i].appid});
   }

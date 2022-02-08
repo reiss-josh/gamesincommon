@@ -51,6 +51,9 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
       }
       //finally, store the flags in the game's object.
       newGames[i].flags = flagData;
+
+      if(i === newGames.length) {console.log("All games successfully pulled.")}
+      else if (steamBlock === CAP) {console.log("Aborting to avoid hitting steam API quota.")};
     }
     //now, upload whatever we need to firebase.
     if(toBePushed && toBePushed.length > 0){await setMultipleGamesFirebase(toBePushed);}
