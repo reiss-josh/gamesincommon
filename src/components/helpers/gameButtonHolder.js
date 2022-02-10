@@ -4,13 +4,13 @@ import {alphabetizeObjects} from '../utilities/generic_utils.js';
 import FriendsGamesContext from '../services/friends-games-context';
 
 //generate the array of GameButton objects
-function generateGameButtons(gamesList){
+function generateGameButtons(gamesList, selectedFlags){
 	if(gamesList){
 		return (
 			<ul>{
 				alphabetizeObjects(gamesList, 'name')
 				.map((game, index) => (
-					GameButton(game)
+					GameButton(game, selectedFlags)
 				))
 			}</ul>
 		)
@@ -21,7 +21,7 @@ function generateGameButtons(gamesList){
 
 const GameButtonHolder = () => {
 	const user = useContext(FriendsGamesContext);
-	return generateGameButtons(user.state.gamesList);
+	return generateGameButtons(user.state.gamesList, user.state.selectedFlags);
 }
 
 export default GameButtonHolder;

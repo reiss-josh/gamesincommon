@@ -1,8 +1,14 @@
 import React from 'react';
 
-const GameButton = (game) =>{
-  //if(game.img_logo_url !== ""){
-	if(game.img_logo_url !== "" && game.flags && game.flags.isMultiplayer === true){
+const GameButton = (game, selectedFlags) =>{
+	if(
+		(selectedFlags.includes("Multiplayer") && game.flags.isMultiplayer === false) ||
+		(selectedFlags.includes("Online Multiplayer") && game.flags.isOnlineMultiplayer === false) ||
+		(selectedFlags.includes("Local Multiplayer") && game.flags.isLocalMultiplayer === false) ||
+		(selectedFlags.includes("Supports Gamepad") && game.flags.isSupportgamepad === false)
+	)
+		return ('');
+  if(game.img_logo_url !== ""){
 		return (
 			<li key = {game.appid}>
 				<button className = 'game-button' onClick = {

@@ -13,7 +13,10 @@ CURRENT STUFF:
 ACTUAL BUGS:
 * selecting users who have private libraries or private accounts breaks everything
 * entering an invalid, numeric vanityurl results in crash
-
+* sometimes pulling from firebase erroneously when clicking additional user - don't know why
+* need to swap firebase keys from name to appid
+* clean database: games marked "Multiplayer" but not "Online" should show "online"
+* clean database: games marked "LAN" should not be Local.
 
 Online:
 * Online PvP: 36
@@ -21,7 +24,6 @@ Online:
 
 Splitscreen:
 * Shared/Split Screen: 24
-* Lan Pvp: 47
 * Shared/Split Screen PvP: 37
 
 Multiplayer:

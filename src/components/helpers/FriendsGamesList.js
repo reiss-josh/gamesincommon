@@ -1,5 +1,6 @@
 import React from 'react';
 import FriendButtonHolder from './friendButtonHolder';
+import FlagButtonHolder from './flagButtonHolder';
 import GameButtonHolder from './gameButtonHolder';
 import FriendsGamesContext from '../services/friends-games-context';
 import {withSteamID} from '../services/SteamID';
@@ -8,6 +9,7 @@ const INITIAL_STATE = {
 	selectedFriends: [],
   friendsList: [],
   gamesList: [],
+	selectedFlags: ["Multiplayer"],
 };
 
 class FriendsGamesList extends React.Component {
@@ -20,7 +22,7 @@ class FriendsGamesList extends React.Component {
   
   updateValue = (key,val) => {
 		this.setState({[key]: val});
-		if(key === 'selectedFriends') this.handleGames();
+		if(key === 'selectedFriends' || key === 'selectedFlags') this.handleGames();
 	}
 
 	async handleFriends(){
@@ -80,6 +82,12 @@ class FriendsGamesList extends React.Component {
 				{"It seems you've deselected all users - a selected user looks like this ()"}
 			</div>; //TODO: make this nice
 
+			//flags list JSX
+			let flagButtons =
+				<FriendsGamesContext.Provider value = {{state: this.state, updateValue: this.updateValue}}>
+					<FlagButtonHolder/>
+				</FriendsGamesContext.Provider>;
+
 		if(this.props.steamid.getSteamID()){
 			return(
 				<div className = "container">
@@ -89,6 +97,7 @@ class FriendsGamesList extends React.Component {
 								{friendButtons}
 							</div>
 						</div>
+						{flagButtons}
 						<div className = "games-column">
 							<div className = "games-scroll">
 								{gamesButtons}
