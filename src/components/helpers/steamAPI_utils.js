@@ -14,10 +14,21 @@ export function determineCategoryFlags(newCategories){
   let isOnlineMultiplayer = false;
   let isLocalMultiplayer = false;
   let isSupportGamepad = false;
+	//1 = Multiplayer
+	//9 = Co-op
+	//18 = Partial Controller
+	//28 = Full Controller
+	//27 = Cross-Platform Multiplayer
+	//36 = Online PVP
+	//38 = Online Co-op
+	//24 = Shared/Split Screen
+	//37 = Shared/Split Screen PVP
+	//39 = Shared/Split Screen Co-op
+	//49 = PVP
   for (let i = 0; i < newCategories.length; i++){
     if(newCategories[i].id === 1 || newCategories[i].id === 9 || newCategories[i].id === 49) isMultiplayer = true;
-    if(newCategories[i].id === 36 || newCategories[i].id === 38) {isMultiplayer = true; isOnlineMultiplayer = true;}
-    if(newCategories[i].id === 24 || newCategories[i].id === 37) {isMultiplayer = true; isLocalMultiplayer = true;}
+    if(newCategories[i].id === 36 || newCategories[i].id === 38 || newCategories[i].id === 27) {isMultiplayer = true; isOnlineMultiplayer = true;}
+    if(newCategories[i].id === 24 || newCategories[i].id === 37 || newCategories[i].id === 39) {isMultiplayer = true; isLocalMultiplayer = true;}
     if(newCategories[i].id === 18 || newCategories[i].id === 28) {isSupportGamepad = true;}
     if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
   }

@@ -1,13 +1,19 @@
 import React from 'react';
 
 const GameButton = (game, selectedFlags) =>{
+
+	//if online is selected, and Multiplayer + Local: bail
+	//if online is selected, and Online is true: we good
+	//if online is selected, and Online is not true, but Multi Is true, and Local is false, we good
+
 	if(
+		//if Multiplayer selected, but not multiplayer
 		(selectedFlags.includes("Multiplayer") && game.flags.isMultiplayer === false) ||
-		(selectedFlags.includes("Online Multiplayer") && game.flags.isOnlineMultiplayer === false) ||
+		//if Online is selected, and it is not true that Multiplayer is flagged but not Local, and Online is not flagged
+		(selectedFlags.includes("Online Multiplayer") && !(game.flags.isMultiplayer === true && game.flags.isLocalMultiplayer === false) && game.flags.isOnlineMultiplayer === false) ||
 		(selectedFlags.includes("Local Multiplayer") && game.flags.isLocalMultiplayer === false) ||
 		(selectedFlags.includes("Supports Gamepad") && game.flags.isSupportgamepad === false)
-	)
-		return ('');
+	) return ('');
   if(game.img_logo_url !== ""){
 		return (
 			<li key = {game.appid}>

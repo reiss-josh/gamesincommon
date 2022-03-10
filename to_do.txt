@@ -17,20 +17,3 @@ ACTUAL BUGS:
 * need to swap firebase keys from name to appid
 * clean database: games marked "Multiplayer" but not "Online" should show "online"
 * clean database: games marked "LAN" should not be Local.
-
-Online:
-* Online PvP: 36
-* Online Co-op: 38
-
-Splitscreen:
-* Shared/Split Screen: 24
-* Shared/Split Screen PvP: 37
-
-Multiplayer:
-* Multi-player: 1
-* PVP: 49
-* Co-op: 9
-
-Controller:
-* Partial Controller: id:18
-* Full Controller Support: id: 28
