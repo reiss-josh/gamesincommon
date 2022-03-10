@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  
 }
 
 body {
@@ -98,13 +97,59 @@ body {
 }
 
 /*app page*/
-.main-row {
-  padding: 10px 0;
-  display:flex;
-}
-
 ul li {
   list-style-type: none;
+}
+
+.container {
+  display: inline;
+  list-style-type: none;
+}
+
+/*filter buttons*/
+.flag-button-holder {
+  padding: 0px 00px;
+  margin: 10px 17px;
+}
+
+.flag-button {
+  display: inline;
+}
+
+/*filter buttons*/
+.flag-button {
+  display: inline;
+  padding: 0px 5px;
+}
+
+.flag-button button
+{
+  display: inline-block;
+  width: 13vw;
+  min-width: 130px;
+  max-width: 130px;
+  height: calc(90px - 3.25vw);
+  max-height: 85px;
+  min-height: 55px;
+  border: 2px solid #a72d2d; 
+  background-color: #262931;
+  color: #6fb3d3;
+  padding: 0px 0px 0px 0px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.flag-button span
+{
+	display:inline-block;
+  width: 110px;
+  vertical-align:middle;
+}
+
+/*main area*/
+.main-row {
+  padding: 10px 0;
+  display: flex;
 }
 
 /*friends list*/

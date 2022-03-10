@@ -5,7 +5,7 @@ import FriendsGamesContext from '../services/friends-games-context';
 //generate the array of SelectorButton objects
 function generateButtons(flagsList, context){
   return (
-  <li>
+  <li className = "flag-button-holder">
     <FlagButton flag = "Multiplayer" context = {context} handler = {handleButtonClick}/>
     <FlagButton flag = "Online Multiplayer" context = {context} handler = {handleButtonClick}/>
     <FlagButton flag = "Local Multiplayer" context = {context} handler = {handleButtonClick}/>

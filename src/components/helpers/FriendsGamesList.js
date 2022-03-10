@@ -91,13 +91,16 @@ class FriendsGamesList extends React.Component {
 		if(this.props.steamid.getSteamID()){
 			return(
 				<div className = "container">
+					<div className = "filter-buttons">
+							{flagButtons}
+						</div>
 					<div className = "main-row">
 						<div className = "friend-column">
 							<div className = "friend-scroll">
 								{friendButtons}
 							</div>
 						</div>
-						{flagButtons}
+						
 						<div className = "games-column">
 							<div className = "games-scroll">
 								{gamesButtons}

@@ -52,7 +52,7 @@ class FlagButton extends Component {
     let flag = this.props.flag;
 
     return (
-      <div className = {'friend-button'}>
+      <div className = {'flag-button'}>
       <button
         onMouseDown={this.onButtonClick}
         style = {this.getBorderColor(this)}>
