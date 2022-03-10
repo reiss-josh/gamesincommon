@@ -77,4 +77,5 @@ export const setMultipleGamesFirebase = async (gamesList) => {
 
   console.log("Pushing firebase game data...");
   await batch.commit();
+  console.log("Data pushed successfully.")
 }

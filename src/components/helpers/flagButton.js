@@ -49,7 +49,7 @@ class FlagButton extends Component {
   }
 
   render(){
-    let flag = this.props.flag;
+    //let flag = this.props.flag;
 
     return (
       <div className = {'flag-button'}>

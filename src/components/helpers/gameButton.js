@@ -5,8 +5,8 @@ const GameButton = (game, selectedFlags) =>{
 	//if online is selected, and Multiplayer + Local: bail
 	//if online is selected, and Online is true: we good
 	//if online is selected, and Online is not true, but Multi Is true, and Local is false, we good
-
 	if(
+		!game.flags ||
 		//if Multiplayer selected, but not multiplayer
 		(selectedFlags.includes("Multiplayer") && game.flags.isMultiplayer === false) ||
 		//if Online is selected, and it is not true that Multiplayer is flagged but not Local, and Online is not flagged
