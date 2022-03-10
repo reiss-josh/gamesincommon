@@ -2,8 +2,9 @@ import db from '../services/Firebase/Firebase.js';
 import { getDocs, collection, doc, writeBatch, getDoc, query, where} from "firebase/firestore";
 
 class Game {
-  constructor (appid, fieldsString) {
+  constructor (appid, name, fieldsString) {
     this.appid = appid;
+    this.name = name;
     this.fieldsString = fieldsString;
   }
   toString(){
@@ -20,7 +21,7 @@ const gameConverter = {
   },
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
-    return new Game(data.appid, data.fieldsString);
+    return new Game(data.appid, data.name, data.fieldsString);
   }
 };
 
@@ -66,12 +67,12 @@ export const setMultipleGamesFirebase = async (gamesList) => {
   for(let i = 0; i < gamesList.length; i++){
     let newRef = null;
     try {
-      newRef = doc(db, "gamesData", gamesList[i].name);
+      newRef = doc(db, "gamesData", gamesList[i].appid);
     } catch (error) {
       newRef = doc(db, "gamesData", gamesList[i].appid.toString());
     }
     refArr.push(newRef);
-    batch.set(refArr[i], {"fieldsString": gamesList[i].flags, "appid": gamesList[i].appid});
+    batch.set(refArr[i], {"fieldsString": gamesList[i].flags, "appid": gamesList[i].appid, "name": gamesList[i].name});
   }
 
   console.log("Pushing firebase game data...");
