@@ -173,7 +173,7 @@ ul li {
   padding: 0px 0px;
   overflow:auto;
   direction: rtl;
-  height:83.5vh;
+  height:92vh;
   min-width: 160px;
   max-width: 230px;
   width: 0vw;
@@ -226,7 +226,7 @@ ul li {
 /*games list*/
 .games-column {
   overflow:auto;
-  height: 84.5vh;
+  height: 92vh;
 }
 
 .games-column li{
