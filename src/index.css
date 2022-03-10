@@ -9,6 +9,21 @@ body {
   color: #6fb3d3;
 }
 
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #53565e;
+  border-radius: 20px
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #6fb3d3;
+  border-radius: 20px;
+  border: 3px solid #262931;
+}
 
 /*landing page*/
 .landing-page {
@@ -158,7 +173,7 @@ ul li {
   padding: 0px 0px;
   overflow:auto;
   direction: rtl;
-  height:96.5vh;
+  height:83.5vh;
   min-width: 160px;
   max-width: 230px;
   width: 0vw;
@@ -211,7 +226,7 @@ ul li {
 /*games list*/
 .games-column {
   overflow:auto;
-  height: 96.5vh;
+  height: 84.5vh;
 }
 
 .games-column li{
