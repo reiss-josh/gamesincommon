@@ -14,6 +14,7 @@ export function determineCategoryFlags(newCategories){
   let isOnlineMultiplayer = false;
   let isLocalMultiplayer = false;
   let isSupportGamepad = false;
+	let isVirtualReality = false;
 	//1 = Multiplayer
 	//9 = Co-op
 	//18 = Partial Controller
@@ -31,12 +32,14 @@ export function determineCategoryFlags(newCategories){
     if(newCategories[i].id === 24 || newCategories[i].id === 37 || newCategories[i].id === 39) {isMultiplayer = true; isLocalMultiplayer = true;}
     if(newCategories[i].id === 18 || newCategories[i].id === 28) {isSupportGamepad = true;}
     if(isMultiplayer && isOnlineMultiplayer && isLocalMultiplayer && isSupportGamepad) i = 100;
-  }
+		//need to check for VR here
+	}
   return JSON.parse(
     '{ "isMultiplayer": '+ isMultiplayer + ',' +
     '"isOnlineMultiplayer": '+ isOnlineMultiplayer + ',' +
     '"isLocalMultiplayer": '+ isLocalMultiplayer + ',' +
-    '"isSupportgamepad": '+ isSupportGamepad + ' }'
+    '"isSupportGamepad": '+ isSupportGamepad + ',' + 
+		'"isVirtualReality": '+ isVirtualReality + '}'
   );
 }
 

@@ -26,3 +26,16 @@ export const getRequest = (url) => {
 			} )
 	)
 }
+
+export const postRequest = (url, data) => {
+	const promise = new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.onload = () => {
+      resolve(xhr.response);
+    };
+    xhr.send(data);
+  });
+  return promise;
+};
