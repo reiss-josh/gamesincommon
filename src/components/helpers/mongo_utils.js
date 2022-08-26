@@ -18,17 +18,15 @@ export const getMultipleGamesMongo = async (gamesList) => {
   //currently mongo is returning entire database... maybe okay???
   let flagData = []
   for(let i=0; i < prom.length; i++){
-    if(1==1){ //if appid in range
-      flagData = JSON.parse('{"isMultiplayer": '+ prom[i]['isMultiplayer'] +',' +
-        '"isOnlineMultiplayer": '+ prom[i]['isOnlineMultiplayer'] +',' +
-        '"isLocalMultiplayer": '+ prom[i]['isLocalMultiplayer'] +',' +
-        '"isSupportGamepad": '+ prom[i]['isSupportGamepad']
-        +'}'
-      );
-      prom[i].fieldsString = flagData;
-      gamesArray.push(prom[i]);
-      idsArray.push(prom[i]['appid']);
-    }
+    flagData = JSON.parse('{"isMultiplayer": '+ prom[i]['isMultiplayer'] +',' +
+      '"isOnlineMultiplayer": '+ prom[i]['isOnlineMultiplayer'] +',' +
+      '"isLocalMultiplayer": '+ prom[i]['isLocalMultiplayer'] +',' +
+      '"isSupportGamepad": '+ prom[i]['isSupportGamepad']
+      +'}'
+    );
+    prom[i].fieldsString = flagData;
+    gamesArray.push(prom[i]);
+    idsArray.push(prom[i]['appid']);
   }
   return [gamesArray, idsArray];
 }
