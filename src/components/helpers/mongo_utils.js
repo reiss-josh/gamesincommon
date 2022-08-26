@@ -50,7 +50,7 @@ export const setMultipleGamesMongo = async (gamesList) => {
     let game = gamesList[i];
     let jgame = jsonify(game);
     let prom = await postRequest(env.proxyUrl+env.dbURL, jgame);
-    console.log(prom);
+    //console.log(prom);
   }
 }
 
