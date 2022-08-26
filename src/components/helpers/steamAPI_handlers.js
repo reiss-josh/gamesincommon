@@ -40,6 +40,8 @@ export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROX
       }  
     });
   }
+  if(newGames.length<= 0) return gamesInCommon;
+
   //then, get the appids of these new games.
   let newAppIDs = assembleIDsArray(newGames); //new app ids
   //query the mongo data for those appids.
