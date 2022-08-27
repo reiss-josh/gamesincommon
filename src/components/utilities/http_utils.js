@@ -1,43 +1,38 @@
-//returns promise object given HTTP method and url
-export function SendHttpRequest (method, url) {
-  const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.responseType = 'json';
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.onload = () => {
-      resolve(xhr.response);
-    };
-    xhr.send();
-    //console.log(xhr);
-  });
-  return promise;
+const axios = require('axios');
+
+export const getRequest = async (url) => {
+  try {
+      const resp = await axios.get(url);
+      return resp.data;
+  } catch (err) {
+      // Handle Error Here
+      console.error(err);
+  }
 };
 
-//returns the result from a GET request at a given url
-export const getRequest = async (url) => {
-	let dataGet = SendHttpRequest('GET', url);
-  //console.log(dataGet);
-	return (
-		dataGet
-			.then(responseData => {
-				return responseData;
-			})
-			.catch(function(error) {
-        console.log(error);
-			} )
-	)
+const postHeaders = {
+  'Content-Type': 'application/json'
 }
 
-export const postRequest = (url, data) => {
-	const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.onload = () => {
-      resolve(xhr.response);
-    };
-    xhr.send(data);
-  });
-  return promise;
+export const postRequest = async (url, postdata) => {
+  //console.log(postdata);
+  try {
+    const resp = await axios.post(url, postdata, {headers: postHeaders})
+    return resp.data;
+  } catch (err) {
+    // Handle Error Here
+    console.error(err);
+  }
 };
+
+export const putRequest = async (url, putdata) => {
+  try {
+    const resp = await axios.put(url, putdata, postHeaders);
+    console.log(resp.data);
+  } catch (err) {
+    // Handle Error Here
+    console.error(err);
+  }
+};
+
+//export const putRequest = (url, data) => {};
