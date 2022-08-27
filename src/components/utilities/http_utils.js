@@ -9,20 +9,22 @@ export function SendHttpRequest (method, url) {
       resolve(xhr.response);
     };
     xhr.send();
+    console.log(xhr);
   });
   return promise;
 };
 
 //returns the result from a GET request at a given url
-export const getRequest = (url) => {
+export const getRequest = async (url) => {
 	let dataGet = SendHttpRequest('GET', url);
+  console.log(dataGet);
 	return (
 		dataGet
 			.then(responseData => {
 				return responseData;
 			})
 			.catch(function(error) {
-				console.log(error.message);
+        console.log(error);
 			} )
 	)
 }

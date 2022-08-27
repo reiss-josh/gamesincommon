@@ -1,5 +1,5 @@
-import {getRequest} from '../utilities/http_utils.js';
-import {postRequest} from '../utilities/http_utils.js';
+import {getRequest} from '../src/components/utilities/http_utils.js';
+import {postRequest} from '../src/components/utilities/http_utils.js';
 
 const env = {
   proxyUrl: process.env.REACT_APP_PROXY_URL,
@@ -33,7 +33,7 @@ export const getMultipleGamesMongo = async (gamesList) => {
 
 const jsonify = (game) => {
   let gamejson = {
-    "appid":game.appid,
+    "appID":game.appid,
     "name":game.name,
     "isLocalMultiplayer":game.flags['isLocalMultiplayer'],
     "isMultiplayer":game.flags['isMultiplayer'],
@@ -49,7 +49,8 @@ export const setMultipleGamesMongo = async (gamesList) => {
   for(let i = 0; i < gamesList.length; i++){
     let game = gamesList[i];
     let jgame = jsonify(game);
-    return await postRequest(env.proxyUrl+env.dbURL, jgame);
+    console.log(jgame);
+    await postRequest(env.proxyUrl+env.dbURL, jgame);
   }
 }
 
