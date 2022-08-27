@@ -9,7 +9,7 @@ export function SendHttpRequest (method, url) {
       resolve(xhr.response);
     };
     xhr.send();
-    console.log(xhr);
+    //console.log(xhr);
   });
   return promise;
 };
@@ -17,7 +17,7 @@ export function SendHttpRequest (method, url) {
 //returns the result from a GET request at a given url
 export const getRequest = async (url) => {
 	let dataGet = SendHttpRequest('GET', url);
-  console.log(dataGet);
+  //console.log(dataGet);
 	return (
 		dataGet
 			.then(responseData => {

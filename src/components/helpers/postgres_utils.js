@@ -4,10 +4,8 @@ import {postRequest} from '../utilities/http_utils.js';
 const env = {
   proxyUrl: process.env.REACT_APP_PROXY_URL,
   dbURL: process.env.REACT_APP_DB_URL
+  //dbURL: 'http://localhost:3333/games'
 };
-
-
-// curl 'https://sci-karate-cors.herokuapp.com/https://gamesincommondb.up.railway.app/games/(4000,620,250320,417860,34270,205230,205950)/' -H "X-Requested-With: XMLHttpRequest" -H "Accept: application/json"
 
 //takes array of appids as integers, gets documents
 export const getMultipleGamesPostgres = async (gamesList) => {
@@ -16,9 +14,9 @@ export const getMultipleGamesPostgres = async (gamesList) => {
   const appIDsString = '/(' + gamesList.join(",",) + ')/';
   
   console.log("About to pull from postgres once.")
-  console.log(appIDsString);
-  console.log(env.proxyUrl+env.REACT_APP_DB_URL+appIDsString)
-  let prom = await getRequest(env.proxyUrl+env.REACT_APP_DB_URL+appIDsString)
+  //console.log(appIDsString);
+  console.log(env.dbURL+appIDsString)
+  let prom = await getRequest(env.dbURL+appIDsString)
   console.log(prom);
   if(!prom) prom = [];
 
@@ -37,26 +35,30 @@ export const getMultipleGamesPostgres = async (gamesList) => {
   return [gamesArray, idsArray];
 }
 
-//need to add line that converts "Garry's" to "Garry'\''s"
-const jsonify = (game) => {
-  let gamejson = {
-    "appID":game.appid,
-    "name":game.name,
-    "isLocalMultiplayer":game.flags['isLocalMultiplayer'],
-    "isMultiplayer":game.flags['isMultiplayer'],
-    "isOnlineMultiplayer":game.flags['isOnlineMultiplayer'],
-    "isSupportGamepad":game.flags['isSupportGamepad'],
-    "isVirtualReality":game.flags['isVirtualReality'],
+const jsonifyGames = (gamesList) => {
+  const gamejsons = []
+  for(var i in gamesList){
+    gamesList[i].name = gamesList[i].name.replace('\'',''); //converts "Garry's" to "Garrys"
+    gamejsons.push({
+      "appID":gamesList[i].appid,
+      "name":gamesList[i].name,
+      "isLocalMultiplayer":gamesList[i].flags['isLocalMultiplayer'],
+      "isMultiplayer":gamesList[i].flags['isMultiplayer'],
+      "isOnlineMultiplayer":gamesList[i].flags['isOnlineMultiplayer'],
+      "isSupportGamepad":gamesList[i].flags['isSupportGamepad'],
+      "isVirtualReality":gamesList[i].flags['isVirtualReality'],
+    })
   }
-  return JSON.stringify(gamejson);
+  const games = {"games":gamejsons}
+  return JSON.stringify(games);
 }
 
 export const setMultipleGamesPostgres = async (gamesList) => {
   console.log(gamesList);
-  console.log("Updating PostgresDB");
-  for(let i = 0; i < gamesList.length; i++){
-    let game = gamesList[i];
-    let jgame = jsonify(game);
-    await postRequest(env.proxyUrl+env.REACT_APP_DB_URL, jgame);
-  }
+  console.log("Updating PostgresDB...");
+  let jgame = jsonifyGames(gamesList);
+  //console.log(jgame);
+  console.log(await postRequest(env.dbURL, jgame));
 }
+
+//export const updateMultipleGamesPostgres = async (gamesList) => {}
