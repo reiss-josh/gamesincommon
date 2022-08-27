@@ -3,8 +3,8 @@ import {postRequest} from '../utilities/http_utils.js';
 
 const env = {
   proxyUrl: process.env.REACT_APP_PROXY_URL,
-  //dbURL: process.env.REACT_APP_DB_URL
-  dbURL: 'http://localhost:3333/games'
+  dbURL: process.env.REACT_APP_DB_URL
+  //dbURL: 'http://localhost:3333/games'
 };
 
 //takes array of appids as integers, gets documents
