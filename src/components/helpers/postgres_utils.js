@@ -37,7 +37,7 @@ export const getMultipleGamesPostgres = async (gamesList) => {
 const jsonifyGames = (gamesList) => {
   const gamejsons = []
   for(var i in gamesList){
-    gamesList[i].name = gamesList[i].name.replace('\'',''); //converts "Garry's" to "Garrys"
+    gamesList[i].name = gamesList[i].name.replaceAll('\'',''); //converts "Garry's" to "Garrys"
     gamejsons.push({
       "appID":gamesList[i].appid,
       "name":gamesList[i].name,
