@@ -104,7 +104,7 @@ export function getGamesInCommon(userObjects) {
 }
 
 export const getIDfromVanity = async(userVanityUrlName, apiKey, proxy = "") => {
-	const baseURL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/";
+	const baseURL = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/";
 	let response = await getRequest(proxy + baseURL + "?key=" + apiKey + "&vanityurl=" + userVanityUrlName)
 	//if user does not have a vanity id
 	if(response.response.success === 42 && isNumeric(userVanityUrlName)){
