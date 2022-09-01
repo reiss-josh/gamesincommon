@@ -8,7 +8,7 @@ import {getMultipleGamesPostgres, setMultipleGamesPostgres} from './postgres_uti
 //todo: make this less of a horrible mess
 export async function handleGamesList(currFrns, currSelected, API_KEY_USER, PROXY_URL) {
   console.log("handling games list...");
-  console.log(currFrns, currSelected);
+  //console.log(currFrns, currSelected);
 
   //determine what data has/hasn't been memoized; retrieve it
   let missFound = sepMissingParams(currFrns, currSelected, 'gameLibrary', 'steamid');
