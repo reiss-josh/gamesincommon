@@ -30,9 +30,7 @@ class FriendsGamesList extends React.Component {
 			return;
 		let friendHandled = await this.props.steamid.handleFriends();
     this.setState({friendsList : friendHandled.newFriendsList});
-		this.setState({selectedFriends: friendHandled.loggedInUserObject});
-
-		this.handleGames();
+		this.setState({selectedFriends: friendHandled.loggedInUserObject}, this.handleGames);
 	}
 
 	async handleGames(){

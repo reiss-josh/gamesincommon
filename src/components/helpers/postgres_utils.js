@@ -2,8 +2,8 @@ import {getRequest} from '../utilities/http_utils.js';
 import {postRequest} from '../utilities/http_utils.js';
 
 const env = {
-  proxyUrl: process.env.REACT_APP_PROXY_URL,
-  dbURL: process.env.REACT_APP_DB_URL
+  proxyUrl: process.env.NEXT_PUBLIC_PROXY_URL,
+  dbURL: process.env.NEXT_PUBLIC_DB_URL
   //dbURL: 'http://localhost:3333/games'
 };
 

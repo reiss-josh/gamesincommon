@@ -1,8 +1,8 @@
 import {handleGamesList, handleFriendsList, handleVanityUrl} from '../../helpers/steamAPI_handlers.js';
 
 const config = {
-  apiKey: process.env.REACT_APP_API_KEY_USER,
-  proxyUrl: process.env.REACT_APP_PROXY_URL,
+  apiKey: process.env.NEXT_PUBLIC_API_KEY_USER,
+  proxyUrl: process.env.NEXT_PUBLIC_PROXY_URL,
   steamid: '',
 };
 
