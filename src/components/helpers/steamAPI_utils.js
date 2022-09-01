@@ -107,9 +107,14 @@ export const getIDfromVanity = async(userVanityUrlName, apiKey, proxy = "") => {
 	const baseURL = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/";
 	let response = await getRequest(proxy + baseURL + "?key=" + apiKey + "&vanityurl=" + userVanityUrlName)
 	//if user does not have a vanity id
-	if(response.response.success === 42 && isNumeric(userVanityUrlName)){
+	try {
+		if(response.response.success === 42 && isNumeric(userVanityUrlName)){
 		response.response.steamid = userVanityUrlName;
 		response.response.success = 1;
+		}
+		return response.response;
+	}	catch (err) {
+		console.log("failed to make request.\n", err);
 	};
-	return response.response;
+	return response;
 }

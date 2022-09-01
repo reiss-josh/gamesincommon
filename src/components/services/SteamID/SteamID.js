@@ -45,8 +45,11 @@ class SteamID {
   async handleVanity(vanityUrl){
     if(vanityUrl === "") return "Error 0: Empty Vanity";
     let handled = await handleVanityUrl(vanityUrl, this.apiKey, this.proxyUrl)
-    if(handled.success === 1) {this.steamid = handled.steamid; return handled.steamid;}
-    else return "Error " + handled.success + ": " + handled.message;
+    try{
+      if(handled.success === 1) {this.steamid = handled.steamid; return handled.steamid;}
+      else return "Error " + handled.success + ": " + handled.message;
+    }
+    catch(err) {return "Unexpected Error: "+err}
   }
 
 }
