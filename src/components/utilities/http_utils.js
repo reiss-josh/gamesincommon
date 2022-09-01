@@ -1,18 +1,22 @@
 const axios = require('axios');
 
+const getHeaders = {
+ 'Access-Control-Allow-Origin': '*'
+}
+
+const postHeaders = {
+  'Content-Type': 'application/json'
+}
+
 export const getRequest = async (url) => {
   try {
-      const resp = await axios.get(url);
+      const resp = await axios.get(url, {headers: getHeaders});
       return resp.data;
   } catch (err) {
       // Handle Error Here
       console.error(err);
   }
 };
-
-const postHeaders = {
-  'Content-Type': 'application/json'
-}
 
 export const postRequest = async (url, postdata) => {
   //console.log(postdata);
@@ -27,7 +31,7 @@ export const postRequest = async (url, postdata) => {
 
 export const putRequest = async (url, putdata) => {
   try {
-    const resp = await axios.put(url, putdata, postHeaders);
+    const resp = await axios.put(url, putdata, {headers: postHeaders});
     console.log(resp.data);
   } catch (err) {
     // Handle Error Here
